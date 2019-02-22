@@ -1,0 +1,71 @@
+.dropzone .upload-container{
+	position:relative;
+	min-height:250px;
+	background-color:#D8D8D8;
+	cursor:pointer;
+}
+.dropzone .upload-cta {
+	position:absolute;
+	top:50%;
+	left:0;
+	transform:translate(0,-50%);
+	text-align:center;
+	width: 100%;
+	pointer-events:none;
+}
+.dropzone .dz-started .upload-cta{
+	display:none;
+}
+
+.dropzone .upload-progress{
+	position:absolute;
+	z-index:5;
+	top:0;
+	left:0;
+	height:100%;
+	width:0%;
+	transition:width .3s;
+	background: red;
+}
+.dropzone .upload-files{
+	margin-top:10px;
+	opacity:0;
+	transition:.3s opacity;
+}
+.dropzone .upload-files.active{
+	opacity:1;
+}
+.dropzone .upload-item{
+	position:relative;
+	margin:15px;
+	padding:15px;
+}
+.dropzone .upload-files .upload-item {
+	margin:0 0 15px 0;
+	padding:0;
+}
+
+.dropzone .upload-modal{
+	position:fixed;
+	top:0;
+	left:0;
+	width:100vw;
+	height:100vh;
+	background-color: rgba(0,0,0,0.5);
+	z-index: 10;
+	opacity:0;
+	transition:opacity .3s;
+	visibility:hidden;
+}
+.dropzone .upload-modal.active{
+	opacity:1;
+	visibility:visible;
+}
+.dropzone .upload-modal-content{
+	position:absolute;
+	top:50%;
+	left:50%;
+	transform:translate(-50%,-50%);
+	background-color:#fff;
+	padding:30px;
+}
