@@ -12,29 +12,16 @@ var YFormDropzone = {
 
 		initDropzone: function()
 		{
-
-			var previewNode = document.querySelector("[data-dz-id] #file-row");
-			previewNode.id = [];
-
-			var previewTemplate = previewNode.parentNode.innerHTML;
-			previewNode.parentNode.removeChild(previewNode);
-
-			// siehe https://www.dropzonejs.com/bootstrap.html#
-			myDropzone = new Dropzone(
-			document.body,
+			console.log("init");
+		myDropzone = new Dropzone(
+			"div#fileupload",
 			{
 				url: "index.php?rex-api-call=yform_dropzone&func=upload",
-				thumbnailWidth: 80,
-				thumbnailHeight: 80,
-				parallelUploads: 4,
-				previewTemplate: previewTemplate,		
-				autoQueue: false, 	  
-				previewsContainer: "#previews",
-				clickable: ".fileinput-button",
 				paramName: "file", // The name that will be used to transfer the file
 				maxFilesize: function() { xysize = $(this).data("dropzone-size_single")/1024; console.log(xysize); return xysize; }, // MB Todo: Aus Attributen auslesen
 				acceptedFiles: ".pdf,.zip", // ToDo: Aus Attributen auslesen
-				createImageThumbnails: true,
+				createImageThumbnails: false,
+				previewTemplate: '<div class="upload-item"><div class="upload-progress" data-dz-uploadprogress></div><div class="upload-data"><span class="upload-name" data-dz-name></span> (<span class="upload-size" data-dz-size></span>)aaaaaaaaaaaa</div></div>',
 				init: function() {
 					$.get('index.php?rex-api-call=yform_dropzone&func=upload', function(data) {
 						$.each(data, function(key,value){
@@ -48,12 +35,11 @@ var YFormDropzone = {
 					});
 				},
 				error: function(file) {
-					$('[data-dz-errormessage]').css('display', 'block');
+					$('.upload-modal').addClass('active');
 					myDropzone.removeFile(file);
 				}
 			}
 		);
-
 		
 		myDropzone.on("addedfile", function(file) {
 			var extension = file.name.substring(file.name.lastIndexOf('.') + 1);
@@ -61,7 +47,6 @@ var YFormDropzone = {
 				myDropzone.options.error.call(myDropzone, file);
 			}
 			else{
-
 				var removeButton = Dropzone.createElement('<a class="remove-file">entfernen</a>');
 				removeButton.addEventListener("click", function(e) {
 					e.preventDefault();
@@ -70,38 +55,10 @@ var YFormDropzone = {
 						myDropzone.removeFile(file);
 					});
 				});
-				file.previewElement.querySelector(".start").onclick = function() { myDropzone.enqueueFile(file); };
-				// file.previewElement.appendChild(removeButton);
+				file.previewElement.appendChild(removeButton);
 				$('input[name="upload"]').val(file.name);
 			}
 		});
-
-		myDropzone.on("totaluploadprogress", function(progress) {
-			document.querySelector("#total-progress .progress-bar").style.width = progress + "%";
-		  });
-
-		  myDropzone.on("sending", function(file) {
-			// Show the total progress bar when upload starts
-			document.querySelector("#total-progress").style.opacity = "1";
-			// And disable the start button
-			file.previewElement.querySelector(".start").setAttribute("disabled", "disabled");
-		  });
-				
-		// Hide the total progress bar when nothing's uploading anymore
-		myDropzone.on("queuecomplete", function(progress) {
-			document.querySelector("#total-progress").style.opacity = "0";
-		});
-		
-		// Setup the buttons for all transfers
-		// The "add files" button doesn't need to be setup because the config
-		// `clickable` has already been specified.
-		document.querySelector("#actions .start").onclick = function() {
-			myDropzone.enqueueFiles(myDropzone.getFilesWithStatus(Dropzone.ADDED));
-		};
-		document.querySelector("#actions .cancel").onclick = function() {
-			myDropzone.removeAllFiles(true);
-		};
-  
 	},
 
 		setActions: function()
@@ -118,7 +75,7 @@ var YFormDropzone = {
 			
 			return false;
 		});
-		/*
+		
 		$('.close-modal').unbind();
 		
 		$('.close-modal').click(function(e){
@@ -128,7 +85,6 @@ var YFormDropzone = {
 			
 			return false;
 		});
-		*/
 	},
 
 		setFile: function(file)
