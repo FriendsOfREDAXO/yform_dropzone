@@ -30,17 +30,40 @@ $class_group = trim('form-group  ' . $class . $this->getWarningClass());
 
 <!-- Dropzone-Code -->
 <!-- HTML heavily inspired by http://blueimp.github.io/jQuery-File-Upload/ -->
-<div class="dropzone dropzone-upload" data-dz-id="<?= $unique ?>" data-dropzone-types="<?= $this->getElement('types') ?>">
+<div class="dropzone dropzone-upload" id="dz-<?= rand() ?>" data-dz-types="<?= $this->getElement('types') ?>" data-dz-max-files="10" data-dz-file-size="<?= $this->getElement('size_single') ?>" data-dz-thumbnail-width="80" data-dz-thumbnail-height="80" data-dz-parallel-uploads="4">
+<h3><?= $this->getElement('label') ?></h3>
+
 <input type="hidden" id="<?= $this->getFieldId() ?>" name="<?= $this->getFieldName() ?>" value="<?= $this->getValue() ?>"/>
 
-<div class="table table-striped" class="files" id="previews">
 
-  <div id="template" class="file-row">
+				<div class="upload-container">
+					<div class="upload-cta">
+						<p><?= $this->getElement('label_dropzone_file_info') ?></p>
+						<button class="btn btn-primary"><?= $this->getElement('label_dropzone_file_button') ?></button>
+					</div>
+				</div>
+
+<div class="table table-striped" class="files" data-dz-role="previews">
+
+  <div class="dz-preview dz-file-preview file-row">
     <!-- This is used as the file preview template -->
 	
     <div>
         <span class="preview"><img data-dz-thumbnail /></span>
     </div>
+
+	<div class="dz-preview dz-file-preview">
+		<div class="dz-details">
+			<div class="dz-filename"><span data-dz-name></span></div>
+			<div class="dz-size" data-dz-size></div>
+			<img data-dz-thumbnail />
+		</div>
+		<div class="dz-progress"><span class="dz-upload" data-dz-uploadprogress></span></div>
+		<div class="dz-success-mark"><span>✔</span></div>
+		<div class="dz-error-mark"><span>✘</span></div>
+		<div class="dz-error-message"><span data-dz-errormessage></span></div>
+	</div>
+
     <div>
         <p class="name" data-dz-name></p>
         <strong class="error text-danger" data-dz-errormessage style="display: none;"><?= $this->getElement('label_dropzone_modal_error') ?></strong>
@@ -51,16 +74,18 @@ $class_group = trim('form-group  ' . $class . $this->getWarningClass());
           <div class="progress-bar progress-bar-success" style="width:0%;" data-dz-uploadprogress></div>
         </div>
     </div>
-    <div>
-      <button class="btn btn-primary start">
+</div>
+
+    <div class="actions">
+      <button type="button" class="btn btn-primary start">
           <i class="glyphicon glyphicon-upload"></i>
           <span>Start</span>
       </button>
-      <button data-dz-remove class="btn btn-warning cancel">
+      <button type="button" data-dz-remove class="btn btn-warning cancel">
           <i class="glyphicon glyphicon-ban-circle"></i>
           <span>Cancel</span>
       </button>
-      <button data-dz-remove class="btn btn-danger delete">
+      <button type="button" data-dz-remove class="btn btn-danger delete">
         <i class="glyphicon glyphicon-trash"></i>
         <span>Delete</span>
       </button>
@@ -68,26 +93,6 @@ $class_group = trim('form-group  ' . $class . $this->getWarningClass());
   </div>
 
 </div>
-
-
-
-<!--
-
-					previewTemplate: '<div class="upload-item"><div class="upload-progress" data-dz-uploadprogress></div><div class="upload-data"><span class="upload-name" data-dz-name></span> (<span class="upload-size" data-dz-size></span>)aaaaaaaaaaaa</div></div>',
-
-
-    <div class="dropzone dropzone-upload" data-dropzone-id="<?= $unique ?>" >
-				<h3><?= $this->getElement('label') ?></h3>
-				<div class="upload-container" id="fileupload"  data-dropzone-size_single="<?= $this->getElement('size_single') ?>">
-					<div class="upload-cta">
-						<p><?= $this->getElement('label_dropzone_file_info') ?></p>
-						<button class="btn btn-primary"><?= $this->getElement('label_dropzone_file_button') ?></button>
-					</div>
-				</div>
-				<div class="upload-files container"><p><?= $this->dropzone_params['label_dropzone_dropzone_files']?></p></div>
-			</div>
- / Dropzone-Code -->
-
 <!-- Wie Upload-Feld -->
     <?php echo $notice ?>
 </div>

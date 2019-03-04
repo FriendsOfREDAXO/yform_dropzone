@@ -4,16 +4,17 @@ Dropzone.autoDiscover = false;
 
 var YFormDropzone = {
 
-	init: function()
+	init: function(dzElement)
 		{
-		this.initDropzone();
-		this.setActions();
+		this.initDropzone(dzElement);
+		this.setActions(dzElement);
 	},
 
-		initDropzone: function()
+		initDropzone: function(dzElement)
 		{
 
-			var previewNode = document.querySelector("[data-dz-id] #file-row");
+			document.querySelector(dzElement);
+			var previewNode = document.querySelector(dzElement +" .file-row");
 			previewNode.id = [];
 
 			var previewTemplate = previewNode.parentNode.innerHTML;
@@ -21,20 +22,29 @@ var YFormDropzone = {
 
 			// siehe https://www.dropzonejs.com/bootstrap.html#
 			myDropzone = new Dropzone(
-			document.body,
+				document.querySelector(dzElement +" .upload-container"), // oder document.body für die gesamte Seite
 			{
+				// https://www.dropzonejs.com/#configuration-options
 				url: "index.php?rex-api-call=yform_dropzone&func=upload",
-				thumbnailWidth: 80,
-				thumbnailHeight: 80,
-				parallelUploads: 4,
+				thumbnailWidth: document.querySelector(dzElement).getAttribute("data-dz-thumbnail-width"),
+				thumbnailHeight: document.querySelector(dzElement).getAttribute("data-dz-thumbnail-height"),
+				parallelUploads: document.querySelector(dzElement).getAttribute("data-dz-parallel-uploads"),
 				previewTemplate: previewTemplate,		
 				autoQueue: false, 	  
-				previewsContainer: "#previews",
-				clickable: ".fileinput-button",
+				acceptedFiles: document.querySelector(".dropzone").getAttribute("data-dz-types"),
+				previewsContainer: document.querySelector(dzElement + ' [data-dz-role="previews"]'),
+				// clickable: document.querySelector(dzElement +" .upload-container"),
 				paramName: "file", // The name that will be used to transfer the file
-				maxFilesize: function() { xysize = $(this).data("dropzone-size_single")/1024; console.log(xysize); return xysize; }, // MB Todo: Aus Attributen auslesen
-				acceptedFiles: ".pdf,.zip", // ToDo: Aus Attributen auslesen
+				maxFilesize: document.querySelector(dzElement).getAttribute("data-dz-max-files"), // Laut Doku nicht maximale Dateigröße, sondern maximale Dateianzahl!
+				filesizeBase: 1000,
+				acceptedFiles: document.querySelector(dzElement).getAttribute("data-dz-types"),
 				createImageThumbnails: true,
+				addRemoveLinks: true,
+				dictCancelUpload: "dictCancelUpload",
+				dictCancelUploadConfirmation: "dictCancelUploadConfirmation",
+				dictRemoveFile: "dictRemoveFile",
+
+				// nachsehen, ob bereits Dateien hochgeladen wurden
 				init: function() {
 					$.get('index.php?rex-api-call=yform_dropzone&func=upload', function(data) {
 						$.each(data, function(key,value){
@@ -47,8 +57,10 @@ var YFormDropzone = {
 						});
 					});
 				},
+
+				// Container für Fehlermeldungen
 				error: function(file) {
-					$('[data-dz-errormessage]').css('display', 'block');
+					$(dzElement + ' [data-dz-errormessage]').css('display', 'block');
 					myDropzone.removeFile(file);
 				}
 			}
@@ -56,11 +68,16 @@ var YFormDropzone = {
 
 		
 		myDropzone.on("addedfile", function(file) {
-			var extension = file.name.substring(file.name.lastIndexOf('.') + 1);
-			if( file.size > 10000000 || (extension != 'pdf' && extension != '.zip') ){
+
+			
+			// überprüfen, ob Dateianhang erlaubt ist
+			var currentExtension = file.name.substring(file.name.lastIndexOf('.') + 1);
+			var typesAllowed = document.querySelector(dzElement).getAttribute("data-dz-types");
+			var maxFilesize = document.querySelector(dzElement).getAttribute("data-dz-file-size");
+			if( file.size >  maxFilesize / 1024 || typesAllowed.split(',').indexOf(currentExtension) ){
 				myDropzone.options.error.call(myDropzone, file);
 			}
-			else{
+			else {
 
 				var removeButton = Dropzone.createElement('<a class="remove-file">entfernen</a>');
 				removeButton.addEventListener("click", function(e) {
@@ -70,37 +87,41 @@ var YFormDropzone = {
 						myDropzone.removeFile(file);
 					});
 				});
-				file.previewElement.querySelector(".start").onclick = function() { myDropzone.enqueueFile(file); };
+				file.previewElement.querySelector(dzElement + ".start").onclick = function() { myDropzone.enqueueFile(file); };
 				// file.previewElement.appendChild(removeButton);
 				$('input[name="upload"]').val(file.name);
 			}
 		});
 
 		myDropzone.on("totaluploadprogress", function(progress) {
-			document.querySelector("#total-progress .progress-bar").style.width = progress + "%";
+			 document.querySelector(dzElement + " .progress-bar").style.width = progress + "%";
 		  });
 
 		  myDropzone.on("sending", function(file) {
 			// Show the total progress bar when upload starts
-			document.querySelector("#total-progress").style.opacity = "1";
+			document.querySelector(".progress").style.opacity = "1";
 			// And disable the start button
 			file.previewElement.querySelector(".start").setAttribute("disabled", "disabled");
 		  });
 				
 		// Hide the total progress bar when nothing's uploading anymore
 		myDropzone.on("queuecomplete", function(progress) {
-			document.querySelector("#total-progress").style.opacity = "0";
+			document.querySelector(".progress").style.opacity = "0";
 		});
 		
 		// Setup the buttons for all transfers
 		// The "add files" button doesn't need to be setup because the config
 		// `clickable` has already been specified.
-		document.querySelector("#actions .start").onclick = function() {
+		/*
+		document.querySelector(dzElement + ".actions .start").onclick = function() {
 			myDropzone.enqueueFiles(myDropzone.getFilesWithStatus(Dropzone.ADDED));
 		};
-		document.querySelector("#actions .cancel").onclick = function() {
+		
+		
+		document.querySelector(dzElement + ".actions .cancel").onclick = function() {
 			myDropzone.removeAllFiles(true);
-		};
+		};*/
+		
   
 	},
 
@@ -144,6 +165,9 @@ var YFormDropzone = {
 };
 
 $(document).ready(function() {
-	YFormDropzone.init();
+
+	$(".dropzone").each(function() {
+		YFormDropzone.init("#"+$(this).attr('id'));
+	});	
 
 });
