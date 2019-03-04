@@ -15,11 +15,12 @@ class rex_yform_value_dropzone extends rex_yform_value_abstract
     {
 		rex_login::startSession();
 
-		// Todo: An das Formular koppeln
-		// Todo: Weitere Parameter an die Session koppeln
-		rex_set_session('yform_dropzone_types', $this->getElement('types'));	
+        // Wir müssen die festgelegten Limits pro Formular als SESSION-Variable speichern, damit die Upload-API serverseitig validieren kann. 
+        $session[$this->getFieldId()]["allowedExtensions"] = $this->getElement('types');
+        $session[$this->getFieldId()]["maxFileSize"] = $this->getElement('size_single');
+		rex_set_session('rex_yform_dropzone', $session);
 
-		$this->params['form_output'][$this->getId()] = $this->parse('value.dropzone.tpl.php', [0 => $dropzone_params]);
+		$this->params['form_output'][$this->getId()] = $this->parse('value.dropzone.tpl.php');
 
     }
 

@@ -12,7 +12,11 @@ class rex_api_yform_dropzone extends rex_api_function
 	} 
 
 	public function getAllowedExtensions() {
-		return explode(",",rex_session('yform_dropzone_types','string',''));
+		return explode(",",rex_session('rex_yform_dropzone')[rex_post("dz-element")]["allowedExtensions"]);
+	} 
+
+	public function getAllowedSizePerFile() {
+		return rex_session('rex_yform_dropzone')[rex_post("dz-element")]["maxFileSize"] * 1024;
 	} 
 
 
@@ -21,6 +25,7 @@ class rex_api_yform_dropzone extends rex_api_function
 		$func = rex_request('func','string','');
 		
 		if($func == 'upload'){
+
 			self::executeUpload();
 		}
 		else if($func == 'delete'){
@@ -51,10 +56,12 @@ class rex_api_yform_dropzone extends rex_api_function
 			$tempFile = $_FILES['file']['tmp_name'];
 			$targetFile =  $_FILES['file']['name'];
 			$fileSize =  $_FILES['file']['size'];
+
+			$ext = strtolower(pathinfo($targetFile, PATHINFO_EXTENSION));
 			
-			$ext = pathinfo($targetFile, PATHINFO_EXTENSION);
-			
-			if(in_array(".".$ext,self::getAllowedExtensions()) && $fileSize < 5000000 && !file_exists(self::getPath().$targetFile) ) {
+			// Todo: Timestamp beifügen, damit derselbe Dateiname mehrfach hochgeladen werden kann.
+
+			if(in_array(".".$ext,self::getAllowedExtensions()) && $fileSize < self::getAllowedSizePerFile() && !file_exists(self::getPath().$targetFile) ) {
 				move_uploaded_file($tempFile,self::getPath().$targetFile);
 
 				// Upload success
@@ -63,7 +70,12 @@ class rex_api_yform_dropzone extends rex_api_function
 				exit(json_encode( [ 'name' => $targetFile, 'size' => $fileSize ] ) );
 			}
 			
-			self::httpError($fileSize);
+			$return["allowedExtensions"] = self::getAllowedExtensions();
+			$return["ext"] = $ext;
+			$return["maxFileSize"] = self::getAllowedSizePerFile();
+			$return["fileSize"] = $fileSize;
+			$return['exists'] = file_exists(self::getPath().$targetFile);
+			self::httpError($return);
 		}
 		else {                                                           
 			$result  = array();

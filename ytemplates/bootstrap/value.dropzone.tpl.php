@@ -1,98 +1,111 @@
 <?php
-$notice = [];
-if ($this->getElement('notice') != '') {
-    $notice[] = rex_i18n::translate($this->getElement('notice'), false);
-}
-if (isset($this->dropzone_params['warning_messages'][$this->getId()]) && !$this->dropzone_params['hide_field_warning_messages']) {
-    $notice[] = '<span class="text-warning">' . rex_i18n::translate($this->dropzone_params['warning_messages'][$this->getId()], false) . '</span>'; //    var_dump();
-}
-if (count($notice) > 0) {
-    $notice = '<p class="help-block">' . implode('<br />', $notice) . '</p>';
-} else {
-    $notice = '';
-}
+$unique = "123"; // todo: unique-Parameter übernehmen
 
-$class = $this->getElement('required') ? 'form-is-required ' : '';
-
+$class       = $this->getElement('required') ? 'form-is-required ' : '';
 $class_group = trim('form-group  ' . $class . $this->getWarningClass());
+dump($_SESSION);
 
 ?>
-<!-- Wie Upload-Feld -->
-<div class="<?php echo $class_group ?>" id="<?php echo $this->getHTMLId() ?>">
-<?php
-// Todo: Diese Texte einfügen.
-/*		$dropzone_params['size_error_single'] = $this->getElement('size_error_single');
-		$dropzone_params['size_all'] = $this->getElement('size_all');
-		$dropzone_params['size_error_all'] = $this->getElement('size_error_all');
-		$dropzone_params['types_error'] = $this->getElement('types_error');
-*/
-?>
+<div class="<?php echo $class_group; ?>" id="<?php echo $this->getHTMLId(); ?>">
 
-<!-- Dropzone-Code -->
-<!-- HTML heavily inspired by http://blueimp.github.io/jQuery-File-Upload/ -->
-<div class="dropzone dropzone-upload" id="dz-<?= rand() ?>" data-dz-types="<?= $this->getElement('types') ?>" data-dz-max-files="10" data-dz-file-size="<?= $this->getElement('size_single') ?>" data-dz-thumbnail-width="80" data-dz-thumbnail-height="80" data-dz-parallel-uploads="4">
-<h3><?= $this->getElement('label') ?></h3>
+    <label for="<?= $this->getFieldName() ?>"><?= $this->getElement('label') ?></label>
+    <input type="hidden" id="<?= $this->getFieldId() ?>" name="<?= $this->getFieldName() ?>" value="<?= $this->getValue() ?>"/>
 
-<input type="hidden" id="<?= $this->getFieldId() ?>" name="<?= $this->getFieldName() ?>" value="<?= $this->getValue() ?>"/>
+    <!-- Dropzone-Code -->
+    <!-- HTML heavily inspired by http://blueimp.github.io/jQuery-File-Upload/ -->
+    <div class="dropzone dropzone-upload panel-default panel" data-dz-id="<?= $this->getFieldId() ?>" id="dz-<?= $this->getFieldId() ?>" data-dz-types="<?= $this->getElement('types') ?>" data-dz-max-files="10" data-dz-file-size="<?= $this->getElement('size_single') ?>" data-dz-thumbnail-width="80" data-dz-thumbnail-height="80" data-dz-parallel-uploads="4">
 
-
-				<div class="upload-container">
-					<div class="upload-cta">
-						<p><?= $this->getElement('label_dropzone_file_info') ?></p>
-						<button class="btn btn-primary"><?= $this->getElement('label_dropzone_file_button') ?></button>
-					</div>
-				</div>
-
-<div class="table table-striped" class="files" data-dz-role="previews">
-
-  <div class="dz-preview dz-file-preview file-row">
-    <!-- This is used as the file preview template -->
-	
-    <div>
-        <span class="preview"><img data-dz-thumbnail /></span>
-    </div>
-
-	<div class="dz-preview dz-file-preview">
-		<div class="dz-details">
-			<div class="dz-filename"><span data-dz-name></span></div>
-			<div class="dz-size" data-dz-size></div>
-			<img data-dz-thumbnail />
-		</div>
-		<div class="dz-progress"><span class="dz-upload" data-dz-uploadprogress></span></div>
-		<div class="dz-success-mark"><span>✔</span></div>
-		<div class="dz-error-mark"><span>✘</span></div>
-		<div class="dz-error-message"><span data-dz-errormessage></span></div>
-	</div>
-
-    <div>
-        <p class="name" data-dz-name></p>
-        <strong class="error text-danger" data-dz-errormessage style="display: none;"><?= $this->getElement('label_dropzone_modal_error') ?></strong>
-    </div>
-    <div>
-        <p class="size" data-dz-size></p>
-        <div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
-          <div class="progress-bar progress-bar-success" style="width:0%;" data-dz-uploadprogress></div>
+        <!-- Upload-Target für Drag & Drop -->
+        <div class="upload-container panel-body">
+            <style>
+                .upload-container.dz-drag-hover {
+                    background: green;
+                }
+                </style>
+                <p><?= $this->getElement('label_dropzone_file_info') ?></p>
         </div>
-    </div>
-</div>
+        <!-- / Upload-Target für Drag & Drop -->
 
-    <div class="actions">
-      <button type="button" class="btn btn-primary start">
-          <i class="glyphicon glyphicon-upload"></i>
-          <span>Start</span>
-      </button>
-      <button type="button" data-dz-remove class="btn btn-warning cancel">
-          <i class="glyphicon glyphicon-ban-circle"></i>
-          <span>Cancel</span>
-      </button>
-      <button type="button" data-dz-remove class="btn btn-danger delete">
-        <i class="glyphicon glyphicon-trash"></i>
-        <span>Delete</span>
-      </button>
-    </div>
-  </div>
+        <!-- Preview-Container -->
+        <div class="table table-striped table-hover dz-files">
 
-</div>
-<!-- Wie Upload-Feld -->
-    <?php echo $notice ?>
+            <!-- Preview-Element -->
+            <div class="dz-preview dz-file-preview file-row">
+                <div><span class="preview"><img data-dz-thumbnail /></span></div>
+
+                <div>
+                    <p class="name" data-dz-name></p>
+                    <div class="error text-danger" data-dz-errormessage style="display: none;">
+                        <div class="dz-success-mark"><span>✔</span></div>
+                        <div class="dz-error-mark"><span>✘</span></div>
+                        <p><?= $this->getElement('label_dropzone_modal_error') ?></p>
+                    </div>
+                </div>
+
+                <div>
+                    <p class="size" data-dz-size></p>
+                    <div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+                        <div class="progress-bar progress-bar-success" style="width:0%;" data-dz-uploadprogress></div>
+                    </div>
+                </div>
+
+            
+                <div class="actions">
+                    <button type="button" class="btn btn-primary start"><i class="glyphicon glyphicon-upload"></i> <span>Start</span></button>
+                    <button type="button" data-dz-remove class="btn btn-warning cancel"><i class="glyphicon glyphicon-ban-circle"></i> <span>Cancel</span></button>
+                    <button type="button" data-dz-remove class="btn btn-danger delete"><i class="glyphicon glyphicon-trash"></i> <span>Delete</span></button>
+                </div>
+            </div>
+            <!-- / Preview-Element -->
+
+        </div>
+
+        <div class="row">
+            <div class="col col-md-7">
+                <!-- The fileinput-button span is used to style the file input field as button -->
+                <span type="button" class="btn btn-success fileinput-button">
+                    <i class="glyphicon glyphicon-plus"></i>
+                    <span><?= $this->getElement('label_dropzone_file_button') ?></span>
+                </span>
+                <button type="button" class="btn btn-primary start">
+                    <i class="glyphicon glyphicon-upload"></i>
+                    <span>Start upload</span>
+                </button>
+                <button type="reset" class="btn btn-warning cancel">
+                    <i class="glyphicon glyphicon-ban-circle"></i>
+                    <span>Cancel upload</span>
+                </button>
+            </div>
+            
+            <div class="col col-md-5">
+                <!-- The global file processing state -->
+                <span class="fileupload-process">
+                <div id="total-progress" class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" style="opacity: 0">
+                    <div class="progress-bar progress-bar-success" style="width:0%;" data-dz-uploadprogress></div>
+                </div>
+                </span>
+            </div>
+        </div>
+        
+    </div>
+
+    <!-- Notice-Feld -->
+    <?php
+        $notice = [];
+
+        if ($this->getElement('notice') != '') {
+            $notice[] = rex_i18n::translate($this->getElement('notice'), false);
+        }
+
+        if (isset($this->dropzone_params['warning_messages'][$this->getId()]) && !$this->dropzone_params['hide_field_warning_messages']) {
+            $notice[] = '<span class="text-warning">' . rex_i18n::translate($this->dropzone_params['warning_messages'][$this->getId()], false) . '</span>';
+        }
+
+        if (count($notice) > 0) {
+            $notice = '<p class="help-block">' . implode('<br />', $notice) . '</p>';
+        } else {
+            $notice = '';
+        }
+        echo $notice; 
+    ?>
 </div>
