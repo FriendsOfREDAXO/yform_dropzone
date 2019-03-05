@@ -52,17 +52,21 @@ class rex_api_yform_dropzone extends rex_api_function
 		
 		rex_dir::create(self::getPath());
 
-		if (!empty($_FILES)) {
-			$tempFile = $_FILES['file']['tmp_name'];
-			$targetFile =  $_FILES['file']['name'];
-			$fileSize =  $_FILES['file']['size'];
+		// Todo: https://www.redaxo.org/api/master/class-rex_request.html files
+
+		if (rex_request::files('file', "array", false)) {
+			$tempFile = rex_request::files('file')['tmp_name'];
+			$targetFile =  strtolower(rex_request::files('file')['name']);
+			$fileSize =  rex_request::files('file')['size'];
 
 			$ext = strtolower(pathinfo($targetFile, PATHINFO_EXTENSION));
 			
-			// Todo: Timestamp beifügen, damit derselbe Dateiname mehrfach hochgeladen werden kann.
 
 			if(in_array(".".$ext,self::getAllowedExtensions()) && $fileSize < self::getAllowedSizePerFile() && !file_exists(self::getPath().$targetFile) ) {
-				move_uploaded_file($tempFile,self::getPath().$targetFile);
+
+				// Todo: Timestamp beifügen, damit derselbe Dateiname mehrfach hochgeladen werden kann.
+			// Todo: auf https://www.redaxo.org/api/master/class-rex_file.html umsteigen
+			move_uploaded_file($tempFile,self::getPath().$targetFile);
 
 				// Upload success
 				header('Content-type: text/json');

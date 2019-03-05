@@ -15,12 +15,58 @@ class rex_yform_value_dropzone extends rex_yform_value_abstract
     {
 		rex_login::startSession();
 
+        // Wenn im Backend ein Download angefordert wurde, dann den Download ausführen
+        if (rex::isBackend() && in_array(rex_request('dropzone_download', 'string'), explode(",",$this->getValue()))) {
+            $this->dropzone_download(rex_request('dropzone_download', 'string'));
+        }
+        
+        // / Backend Download ENDE
+
         // Wir müssen die festgelegten Limits pro Formular als SESSION-Variable speichern, damit die Upload-API serverseitig validieren kann. 
         $session[$this->getFieldId()]["allowedExtensions"] = $this->getElement('types');
         $session[$this->getFieldId()]["maxFileSize"] = $this->getElement('size_single');
 		rex_set_session('rex_yform_dropzone', $session);
 
+        // Dropzone ausgeben
 		$this->params['form_output'][$this->getId()] = $this->parse('value.dropzone.tpl.php');
+
+        // Dateien / Anhänge in E-Mail verfügbar machen
+        $server_upload_path = rex_path::pluginData('yform', 'manager', 'upload/dropzone/'.session_id().'/');
+
+        // Nur Dateien, keine Ordner
+        // https://stackoverflow.com/questions/14680121/include-just-files-in-scandir-array
+        $uploaded_files = array_filter(scandir($server_upload_path), function($item) {
+            $file = $server_upload_path . $item;
+            return !is_dir($file);
+        });
+
+        // SESSION als Ordner-Pfad mitgeben
+        // Achtung, nicht den Server-Data-Path verwenden!
+        $value = session_id(). "/".implode(",".session_id()."/",$uploaded_files); 
+        
+        $this->params['value_pool']['email'][$this->getName()] = $value;
+
+        if ($this->saveInDb()) {
+            $this->params['value_pool']['sql'][$this->getName()] = $value;
+        }
+
+        // Todo: foreach file in folder add to  value_pool files
+        if ($filepath != '') {
+            $this->params['value_pool']['files'][$this->getName()] = [$filename, $filepath, $real_filepath];
+        }
+
+        $errors = [];
+        // Todo: if empty folder add error
+        if ($this->params['send'] && $this->getElement('required') == 1 && $filename == '') {
+            $errors[] = $error_messages['empty_error'];
+        }
+
+        // Todo: if error make form invalid
+        if ($this->params['send'] && count($errors) > 0) {
+            $this->params['warning'][$this->getId()] = $this->params['error_class'];
+            $this->params['warning_messages'][$this->getId()] = implode(', ', $errors);
+        }
+
 
     }
 
@@ -58,18 +104,20 @@ class rex_yform_value_dropzone extends rex_yform_value_abstract
 	
     public static function getListValue($params)
     {
-        $value = $params['subject'];
-        $length = strlen($value);
-        $files = explode(",",$value);
+        $files = explode(",",$params['subject']);
 
-        $return = $value;
+        $downloads = [];
         if (rex::isBackend()) {
 			foreach ($files as $file) {
 				$field = new rex_yform_manager_field($params['params']['field']);
-				if ($value != '') {
-					$return .= '<a href="/redaxo/index.php?page=yform/manager/data_edit&table_name='.$field->getElement('table_name').'&data_id='.$params['list']->getValue('id').'&func=edit&rex_upload_downloadfile='.urlencode($file).'" title="'.rex_escape($file).'">'.rex_escape($file).'</a>';
+				if ($files != []) {
+                    $file_name = array_pop(explode("/",$file));
+                    $downloads[] = '<a href="/redaxo/index.php?page=yform/manager/data_edit&table_name='.$field->getElement('table_name').'&data_id='.$params['list']->getValue('id').'&func=edit&dropzone_download='.urlencode($file).'" title="'.rex_escape($file_name).'">'.rex_escape($file_name).'</a>';
+                    $return = implode("<br />", $downloads);
 				}
 			}
+        } else {
+            $return = $params['subject']; // Todo: In der Editieransicht am Feld lassen
         }
 
         return $return;
@@ -101,4 +149,26 @@ class rex_yform_value_dropzone extends rex_yform_value_abstract
         }
         return $sql->escapeIdentifier($field) . ' = ' . $sql->escape($value);
     }
+
+    // Analog zum upload-Feld in YForm 3.0
+    public static function dropzone_download($file)
+    {
+        $filename = array_pop(explode(",", $file));
+        $filepath = rex_path::pluginData('yform', 'manager', 'upload/dropzone/'.$file);
+        
+        if (file_exists($filepath)) {
+            ob_end_clean();
+            header('Content-Description: File Transfer');
+            header('Content-Type: application/octet-stream');
+            header('Content-Disposition: attachment; filename='.$filename);
+            header('Expires: 0');
+            header('Cache-Control: must-revalidate');
+            header('Pragma: public');
+            header('Content-Length: ' . filesize($filepath));
+            readfile($filepath);
+            exit;
+        }
+        dump($file);
+    }
+
 }

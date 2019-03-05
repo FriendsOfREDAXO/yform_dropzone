@@ -1,6 +1,4 @@
 <?php
-$unique = "123"; // todo: unique-Parameter übernehmen
-
 $class       = $this->getElement('required') ? 'form-is-required ' : '';
 $class_group = trim('form-group  ' . $class . $this->getWarningClass());
 dump($_SESSION);
@@ -64,16 +62,13 @@ dump($_SESSION);
             <div class="col col-md-7">
                 <!-- The fileinput-button span is used to style the file input field as button -->
                 <span type="button" class="btn btn-success fileinput-button">
-                    <i class="glyphicon glyphicon-plus"></i>
-                    <span><?= $this->getElement('label_dropzone_file_button') ?></span>
+                    <i class="glyphicon glyphicon-plus"></i><span><?= $this->getElement('label_dropzone_file_button') ?></span>
                 </span>
                 <button type="button" class="btn btn-primary start">
-                    <i class="glyphicon glyphicon-upload"></i>
-                    <span>Start upload</span>
+                    <i class="glyphicon glyphicon-upload"></i><span>Start upload</span>
                 </button>
                 <button type="reset" class="btn btn-warning cancel">
-                    <i class="glyphicon glyphicon-ban-circle"></i>
-                    <span>Cancel upload</span>
+                    <i class="glyphicon glyphicon-ban-circle"></i><span>Cancel upload</span>
                 </button>
             </div>
             
