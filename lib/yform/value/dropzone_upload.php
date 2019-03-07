@@ -16,7 +16,7 @@ class rex_yform_value_dropzone extends rex_yform_value_abstract
 		rex_login::startSession();
 
         // Wenn im Backend ein Download angefordert wurde, dann den Download ausführen
-        if (rex::isBackend() && in_array(rex_request('dropzone_download', 'string'), explode(",",$this->getValue()))) {
+        if (rex::isBackend() && rex_request('dropzone_download', 'string', false) && in_array(rex_request('dropzone_download', 'string'), explode(",",$this->getValue()))) {
             $this->dropzone_download(rex_request('dropzone_download', 'string'));
         }
         
@@ -31,18 +31,18 @@ class rex_yform_value_dropzone extends rex_yform_value_abstract
 		$this->params['form_output'][$this->getId()] = $this->parse('value.dropzone.tpl.php');
 
         // Dateien / Anhänge in E-Mail verfügbar machen
-        $server_upload_path = rex_path::pluginData('yform', 'manager', 'upload/dropzone/'.session_id().'/');
+        $server_upload_path = rex_path::pluginData('yform', 'manager', 'upload/dropzone/'.$unique.'/');
 
         // Nur Dateien, keine Ordner
         // https://stackoverflow.com/questions/14680121/include-just-files-in-scandir-array
-        $uploaded_files = array_filter(scandir($server_upload_path), function($item) {
-            $file = $server_upload_path . $item;
-            return !is_dir($file);
-        });
+        if(is_dir($server_upload_path)) {
+            $uploaded_files = array_filter(scandir($server_upload_path), function($item) {
+                $file = $server_upload_path . $item;
+                return !is_dir($file);
+            });
 
-        // SESSION als Ordner-Pfad mitgeben
-        // Achtung, nicht den Server-Data-Path verwenden!
-        $value = session_id(). "/".implode(",".session_id()."/",$uploaded_files); 
+            $value = $unique. "/".implode(",".$unique."/",$uploaded_files); 
+        };
         
         $this->params['value_pool']['email'][$this->getName()] = $value;
 

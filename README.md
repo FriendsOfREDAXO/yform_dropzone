@@ -25,7 +25,7 @@ Voraussetzung für die aktuelle Version von YUploader: REDAXO >= 5.6, YForm >= 3
 
 ## Setup
 
-Nach der Installation steht das Feld direkt zur Verfügung.
+Nach der Installation 
 
 ## Feld hinzufügen (Table Manager)
 
@@ -33,21 +33,7 @@ Nach der Installation steht das Feld direkt zur Verfügung.
 2. In der gewünschten Tabelle die Felddefinition editieren
 3. Das Feld `dropzone` hinzufügen und den Instruktionen folgen
 
-Anschließend kann das Feld verwendet werden.
-
-## Feld hinzufügen (YForm Formbuilder)
-
-TODO: Hier Felddefinition einfügen.
-
-# Weitere Informationen / FAQ
-
-## Wo werden die Daten gespeichert?
-
-Die Dateien werden in `/data/addons/yform/plugins/manager/upload/dropzone/` abgelegt.
-
-## Werden die Dateien automatisch gelöscht?
-
-Nein. Deshalb sollte ausreichend Speicherplatz vorhanden sein.
+Anschließend kann das Feld verwendet werden
 
 # Links und Hilfe
 

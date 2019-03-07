@@ -1,7 +1,6 @@
 <?php
 $class       = $this->getElement('required') ? 'form-is-required ' : '';
 $class_group = trim('form-group  ' . $class . $this->getWarningClass());
-dump($_SESSION);
 
 ?>
 <div class="<?php echo $class_group; ?>" id="<?php echo $this->getHTMLId(); ?>">
@@ -11,7 +10,7 @@ dump($_SESSION);
 
     <!-- Dropzone-Code -->
     <!-- HTML heavily inspired by http://blueimp.github.io/jQuery-File-Upload/ -->
-    <div class="dropzone dropzone-upload panel-default panel" data-dz-id="<?= $this->getFieldId() ?>" id="dz-<?= $this->getFieldId() ?>" data-dz-types="<?= $this->getElement('types') ?>" data-dz-max-files="10" data-dz-file-size="<?= $this->getElement('size_single') ?>" data-dz-thumbnail-width="80" data-dz-thumbnail-height="80" data-dz-parallel-uploads="4">
+    <div class="dropzone dropzone-upload panel-default panel" data-dz-id="<?= $this->getFieldId() ?>" data-dz-unique-id="12345" id="dz-<?= $this->getFieldId() ?>" data-dz-types="<?= $this->getElement('types') ?>" data-dz-max-files="10" data-dz-file-size="<?= $this->getElement('size_single') ?>" data-dz-thumbnail-width="80" data-dz-thumbnail-height="80" data-dz-parallel-uploads="4">
 
         <!-- Upload-Target für Drag & Drop -->
         <div class="upload-container panel-body">
