@@ -23,20 +23,19 @@ class rex_api_yform_dropzone extends rex_api_function
     function execute()
     {
 		$func = rex_request('func','string','');
-		
+		$file = rex_request('file','string','');
+
 		if($func == 'upload'){
 
 			self::executeUpload();
 		}
 		else if($func == 'delete'){
-			self::executeDelete();
+			self::executeDelete($file);
 		}
     }
 	
-	public static function executeDelete(){
-		
-		$file = rex_request('file','string','');
-				
+	public static function executeDelete($file){
+						
 		if($file != '' && file_exists(self::getPath().$file) ){
 			unlink(self::getPath().$file);
 			header( 'HTTP/1.1 200 OK' );
@@ -64,7 +63,7 @@ class rex_api_yform_dropzone extends rex_api_function
 
 			if(in_array(".".$ext,self::getAllowedExtensions()) && $fileSize < self::getAllowedSizePerFile() && !file_exists(self::getPath().$targetFile) ) {
 
-				// Todo: Timestamp beifügen, damit derselbe Dateiname mehrfach hochgeladen werden kann.
+			// Todo: Timestamp beifügen, damit derselbe Dateiname mehrfach hochgeladen werden kann.
 			// Todo: auf https://www.redaxo.org/api/master/class-rex_file.html umsteigen
 			move_uploaded_file($tempFile,self::getPath().$targetFile);
 
