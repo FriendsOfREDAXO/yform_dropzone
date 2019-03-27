@@ -3,8 +3,7 @@
 /**
  * yform.
  *
- * @author jan.kristinus[at]redaxo[dot]org Jan Kristinus
- * @author <a href="http://www.yakamara.de">www.yakamara.de</a>
+ * @author Alexander Walther
  */
 
 class rex_yform_value_dropzone extends rex_yform_value_abstract
@@ -13,18 +12,22 @@ class rex_yform_value_dropzone extends rex_yform_value_abstract
 
     public function enterObject()
     {
-		rex_login::startSession();
+        rex_login::startSession();
+        
 
+        $unique = self::_upload_getUniqueKey();
+
+        // Backend Download
         // Wenn im Backend ein Download angefordert wurde, dann den Download ausführen
         if (rex::isBackend() && rex_request('dropzone_download', 'string', false) && in_array(rex_request('dropzone_download', 'string'), explode(",",$this->getValue()))) {
             $this->dropzone_download(rex_request('dropzone_download', 'string'));
         }
-        
-        // / Backend Download ENDE
+        // / Backend Download
 
         // Wir müssen die festgelegten Limits pro Formular als SESSION-Variable speichern, damit die Upload-API serverseitig validieren kann. 
         $session[$this->getFieldId()]["allowedExtensions"] = $this->getElement('types');
         $session[$this->getFieldId()]["maxFileSize"] = $this->getElement('size_single');
+        $session[$this->getFieldId()]["unique_key"] = $unique;
 		rex_set_session('rex_yform_dropzone', $session);
 
         // Dropzone ausgeben
@@ -95,6 +98,8 @@ class rex_yform_value_dropzone extends rex_yform_value_abstract
 					'label_dropzone_file_button' => ['type' => 'text', 'label' => rex_i18n::msg('yform_values_dropzone_label_dropzone_file_button')],
 					'label_dropzone_modal_error' => ['type' => 'text', 'label' => rex_i18n::msg('yform_values_dropzone_label_dropzone_modal_error') , 'notice' => 'z.B. <code>Dateien zum Hochladen auf dieses Feld ziehen</code>'],
 					'label_dropzone_modal_button' => ['type' => 'text', 'label' => rex_i18n::msg('yform_values_dropzone_label_dropzone_modal_button')],
+					'label_dropzone_file_button_start' => ['type' => 'text', 'label' => rex_i18n::msg('yform_values_dropzone_label_dropzone_modal_button')],
+					'label_dropzone_file_button_cancle' => ['type' => 'text', 'label' => rex_i18n::msg('yform_values_dropzone_label_dropzone_modal_button')],
 				],
 				'description' => rex_i18n::msg('yform_values_dropzone_description'),
             'dbtype' => 'text',
@@ -150,7 +155,7 @@ class rex_yform_value_dropzone extends rex_yform_value_abstract
         return $sql->escapeIdentifier($field) . ' = ' . $sql->escape($value);
     }
 
-    // Analog zum upload-Feld in YForm 3.0
+    // Analog zum upload-Feld in YForm 3.0 - Datei herunterladen
     public static function dropzone_download($file)
     {
         $filename = array_pop(explode(",", $file));
@@ -168,7 +173,11 @@ class rex_yform_value_dropzone extends rex_yform_value_abstract
             readfile($filepath);
             exit;
         }
-        dump($file);
+    }
+
+    private function _upload_getUniqueKey()
+    {
+        return bin2hex(openssl_random_pseudo_bytes(32, $cstrong));
     }
 
 }

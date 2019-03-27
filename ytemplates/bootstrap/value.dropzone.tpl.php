@@ -10,7 +10,38 @@ $class_group = trim('form-group  ' . $class . $this->getWarningClass());
 
     <!-- Dropzone-Code -->
     <!-- HTML heavily inspired by http://blueimp.github.io/jQuery-File-Upload/ -->
-    <div class="dropzone dropzone-upload panel-default panel" data-dz-id="<?= $this->getFieldId() ?>" data-dz-unique-id="12345" id="dz-<?= $this->getFieldId() ?>" data-dz-types="<?= $this->getElement('types') ?>" data-dz-max-files="10" data-dz-file-size="<?= $this->getElement('size_single') ?>" data-dz-thumbnail-width="80" data-dz-thumbnail-height="80" data-dz-parallel-uploads="4">
+    <div class="dropzone dropzone-upload panel-default panel" data-dz-id="<?= $this->getFieldId() ?>" data-dz-unique-id="12345" id="dz-<?= $this->getFieldId() ?>" 
+    data-dz-types="<?= $this->getElement('types') ?>" data-dz-max-files="10" data-dz-file-size="<?= $this->getElement('size_single') ?>" data-dz-thumbnail-width="80" data-dz-thumbnail-height="80" data-dz-parallel-uploads="4"
+    
+    data-dz-i18n-dictDefaultMessage="Dateien auf dieses Feld ziehen"
+    data-dz-i18n-dictFallbackMessage="Ihr Browser untersützt leider keine Drag'n'Drop Datei Uploads"
+    data-dz-i18n-dictFallbackText=""
+    data-dz-i18n-dictFileTooBig="Datei ist zu groß"
+    data-dz-i18n-dictInvalidFileType="Dateityp wird nicht unterstützt"
+    data-dz-i18n-dictResponseError="Ein Fehler ist aufgetreten"
+    data-dz-i18n-dictCancelUpload="abbrechen"
+    data-dz-i18n-dictUploadCanceled="Upload wurde abgebrochen"
+    data-dz-i18n-dictCancelUploadConfirmation="Upload wird abgebrochen" 
+    data-dz-i18n-dictRemoveFile="entfernen"
+    data-dz-i18n-dictRemoveFileConfirmation="Datei wird entfernt"
+    data-dz-i18n-dictMaxFilesExceeded="Zuviele Dateien"
+    data-dz-i18n-dictFileSizeUnits="mb"
+    >
+
+    <div class="row">
+        <div class="col col-md-12">
+            <!-- The fileinput-button span is used to style the file input field as button -->
+            <span type="button" class="btn btn-success fileinput-button">
+                <i class="glyphicon glyphicon-plus"></i><span><?= $this->getElement('label_dropzone_file_button') ?></span>
+            </span>
+            <button type="button" class="btn btn-primary start">
+                <i class="glyphicon glyphicon-upload"></i><span><?= $this->getElement('label_dropzone_file_button_start') ?></span>
+            </button>
+            <button type="reset" class="btn btn-warning cancel">
+                <i class="glyphicon glyphicon-ban-circle"></i><span><?= $this->getElement('label_dropzone_file_button_cancle') ?></span>
+            </button>
+        </div>
+    </div>
 
         <!-- Upload-Target für Drag & Drop -->
         <div class="upload-container panel-body">
@@ -23,6 +54,8 @@ $class_group = trim('form-group  ' . $class . $this->getWarningClass());
         </div>
         <!-- / Upload-Target für Drag & Drop -->
 
+
+
         <!-- Preview-Container -->
         <div class="table table-striped table-hover dz-files">
 
@@ -32,10 +65,10 @@ $class_group = trim('form-group  ' . $class . $this->getWarningClass());
 
                 <div>
                     <p class="name" data-dz-name></p>
-                    <div class="error text-danger" data-dz-errormessage style="display: none;">
+                    <div class="error text-danger" data-dz-errormessage style="display: block;">
                         <div class="dz-success-mark"><span>✔</span></div>
                         <div class="dz-error-mark"><span>✘</span></div>
-                        <p><?= $this->getElement('label_dropzone_modal_error') ?></p>
+                        <p>Fehlermeldung<?= $this->getElement('label_dropzone_modal_error') ?></p>
                     </div>
                 </div>
 
@@ -56,22 +89,9 @@ $class_group = trim('form-group  ' . $class . $this->getWarningClass());
             <!-- / Preview-Element -->
 
         </div>
-
-        <div class="row">
-            <div class="col col-md-7">
-                <!-- The fileinput-button span is used to style the file input field as button -->
-                <span type="button" class="btn btn-success fileinput-button">
-                    <i class="glyphicon glyphicon-plus"></i><span><?= $this->getElement('label_dropzone_file_button') ?></span>
-                </span>
-                <button type="button" class="btn btn-primary start">
-                    <i class="glyphicon glyphicon-upload"></i><span>Start upload</span>
-                </button>
-                <button type="reset" class="btn btn-warning cancel">
-                    <i class="glyphicon glyphicon-ban-circle"></i><span>Cancel upload</span>
-                </button>
-            </div>
             
-            <div class="col col-md-5">
+        <div class="row">
+            <div class="col col-md-12">
                 <!-- The global file processing state -->
                 <span class="fileupload-process">
                 <div id="total-progress" class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" style="opacity: 0">
