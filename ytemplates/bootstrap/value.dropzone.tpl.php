@@ -103,3 +103,7 @@ $class_group = trim('form-group  ' . $class . $this->getWarningClass());
         echo $notice; 
     ?>
 </div>
+<script src="/assets/addons/yuploader/js/dropzone.js" defer></script>
+<!-- <script src="/assets/js/dropzone.min.js"></script> -->
+<script src="/assets/addons/yuploader/js/dropzone-yform.js" defer></script>
+<link rel="stylesheet" href="/assets/addons/yuploader/css/dropzone.css">
