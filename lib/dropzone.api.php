@@ -8,15 +8,15 @@ class rex_api_yform_dropzone extends rex_api_function
 
 	public function getPath() {
 		// Todo: Subpath für jede Datei, um Doubletten zu verhindern.
-		return rex_path::pluginData('yform', 'manager', 'upload/dropzone/'.rex_string::normalize(rex_post("unique")).'/');
+		return rex_path::pluginData('yform', 'manager', 'upload/dropzone/'.rex_post("uniqueKey", 'string', 'nirvana').'/');
 	} 
 
 	public function getAllowedExtensions() {
-		return explode(",",rex_session('rex_yform_dropzone')[rex_string::normalize(rex_post("unique"))]["allowedExtensions"]);
+		return explode(",",rex_session('rex_yform_dropzone')[rex_post("uniqueKey")]["allowedExtensions"]);
 	} 
 
 	public function getAllowedSizePerFile() {
-		return rex_session('rex_yform_dropzone')[rex_string::normalize(rex_post("unique"))]["maxFileSize"] * 1024;
+		return rex_session('rex_yform_dropzone')[rex_post("uniqueKey")]["maxFileSize"] * 1024;
 	} 
 
 

@@ -14,8 +14,12 @@ class rex_yform_value_dropzone extends rex_yform_value_abstract
     {
         rex_login::startSession();
         
-
-        $unique = self::_upload_getUniqueKey();
+        $uniqueKey = $this->params['this']->getFieldValue($this->getName(), [$this->getId(), 'unique']);
+        if ($uniqueKey == '') {
+            // Nein - also anlegen
+            $uniqueKey = self::_upload_getUniqueKey();
+        }
+        dump($uniqueKey);dump($this->params['this']);
 
         // Backend Download
         // Wenn im Backend ein Download angefordert wurde, dann den Download ausführen
@@ -27,14 +31,14 @@ class rex_yform_value_dropzone extends rex_yform_value_abstract
         // Wir müssen die festgelegten Limits pro Formular als SESSION-Variable speichern, damit die Upload-API serverseitig validieren kann. 
         $session[$this->getFieldId()]["allowedExtensions"] = $this->getElement('types');
         $session[$this->getFieldId()]["maxFileSize"] = $this->getElement('size_single');
-        $session[$this->getFieldId()]["unique_key"] = $unique;
+        $session[$this->getFieldId()]["uniqueKey"] = $uniqueKey;
 		rex_set_session('rex_yform_dropzone', $session);
 
         // Dropzone ausgeben
-		$this->params['form_output'][$this->getId()] = $this->parse('value.dropzone.tpl.php');
+		$this->params['form_output'][$this->getId()] = $this->parse('value.dropzone.tpl.php', ['uniqueKey' => $uniqueKey]);
 
         // Dateien / Anhänge in E-Mail verfügbar machen
-        $server_upload_path = rex_path::pluginData('yform', 'manager', 'upload/dropzone/'.$unique.'/');
+        $server_upload_path = rex_path::pluginData('yform', 'manager', 'upload/dropzone/'.$uniqueKey.'/');
 
         // Nur Dateien, keine Ordner
         // https://stackoverflow.com/questions/14680121/include-just-files-in-scandir-array
@@ -44,7 +48,7 @@ class rex_yform_value_dropzone extends rex_yform_value_abstract
                 return !is_dir($file);
             });
 
-            $value = $unique. "/".implode(",".$unique."/",$uploaded_files); 
+            $value = $uniqueKey. "/".implode(",".$uniqueKey."/",$uploaded_files); 
         };
         
         $this->params['value_pool']['email'][$this->getName()] = $value;
@@ -75,7 +79,7 @@ class rex_yform_value_dropzone extends rex_yform_value_abstract
 
     public function getDescription()
     {
-        return 'dropzone|name|label|Maximale Größe in Kb oder Range 100,500 oder leer lassen| endungenmitpunktmitkommasepariert oder *| pflicht=1 | min_err,max_err,type_err,empty_err,delete_file_msg ';
+        return 'dropzone|name|label|1000 weitere Parameter';
     }
 
     public function getDefinitions()
@@ -99,7 +103,8 @@ class rex_yform_value_dropzone extends rex_yform_value_abstract
 					'label_dropzone_modal_error' => ['type' => 'text', 'label' => rex_i18n::msg('yform_values_dropzone_label_dropzone_modal_error') , 'notice' => 'z.B. <code>Dateien zum Hochladen auf dieses Feld ziehen</code>'],
 					'label_dropzone_modal_button' => ['type' => 'text', 'label' => rex_i18n::msg('yform_values_dropzone_label_dropzone_modal_button')],
 					'label_dropzone_file_button_start' => ['type' => 'text', 'label' => rex_i18n::msg('yform_values_dropzone_label_dropzone_modal_button')],
-					'label_dropzone_file_button_cancle' => ['type' => 'text', 'label' => rex_i18n::msg('yform_values_dropzone_label_dropzone_modal_button')],
+                    'label_dropzone_file_button_cancle' => ['type' => 'text', 'label' => rex_i18n::msg('yform_values_dropzone_label_dropzone_modal_button')],
+                    'dropzone_dict' => ['type' => 'textarea', 'label' => rex_i18n::msg('yform_values_dropzone_dict')],
 				],
 				'description' => rex_i18n::msg('yform_values_dropzone_description'),
             'dbtype' => 'text',
@@ -177,7 +182,7 @@ class rex_yform_value_dropzone extends rex_yform_value_abstract
 
     private function _upload_getUniqueKey()
     {
-        return bin2hex(openssl_random_pseudo_bytes(32, $cstrong));
+        return bin2hex(openssl_random_pseudo_bytes(16));
     }
 
 }
