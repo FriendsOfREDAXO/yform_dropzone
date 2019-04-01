@@ -94,6 +94,7 @@ class rex_yform_value_dropzone extends rex_yform_value_abstract
 					'label' => ['type' => 'text', 'label' => rex_i18n::msg('yform_values_defaults_label')],
 					'allowed_types' => ['type' => 'text', 'default' => ".pdf", 'label' => rex_i18n::msg('yform_values_dropzone_types'), 'notice' => rex_i18n::msg('yform_values_dropzone_types_notice')],
 					'allowed_filesize' => ['type' => 'text', 'default' => "10", 'label' => rex_i18n::msg('yform_values_dropzone_filesize'), 'notice' => rex_i18n::msg('yform_values_dropzone_filesize_notice')],
+					'allowed_max_files' => ['type' => 'text', 'default' => "10", 'label' => rex_i18n::msg('yform_values_dropzone_allowed_max_files'), 'notice' => rex_i18n::msg('yform_values_dropzone_allowed_max_files_notice')],
                     'dropzone_dict' => ['type' => 'textarea', 'label' => rex_i18n::msg('yform_values_dropzone_dict'), 'notice' => rex_i18n::msg('yform_values_dropzone_dict_notice')],
 					'required' => ['type' => 'boolean', 'label' => rex_i18n::msg('yform_values_dropzone_required')],
 					'notice' => ['type' => 'text', 'label' => rex_i18n::msg('yform_values_defaults_notice')],

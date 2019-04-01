@@ -7,4 +7,6 @@ yform_values_dropzone_dict_notice = im JSON-Format können einzelne Beschriftung
 yform_values_dropzone_required = Pflichtfeld
 yform_values_defaults_notice = Hinweis- / Notizfeld
 
+yform_values_dropzone_allowed_max_files = Anzahl
+yform_values_dropzone_allowed_max_files_notice = Maximale Anzahl an Dateien, die insgesamt hochgladen werden dürfen, z.B. <code>10</code>
 yform_values_dropzone_description = Fügt ein Upload-Feld auf Basis von dropzone.js hinzu, mit dem mehrere Dateien hochgeladen werden können. 
