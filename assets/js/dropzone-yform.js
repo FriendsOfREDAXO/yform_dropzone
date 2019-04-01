@@ -36,25 +36,28 @@ var YFormDropzone = {
 				maxFilesize: dzEl.dataset.dzFileSize * 1024,
 				parallelUploads: dzEl.dataset.dzParallelUploads,
 				paramName: "file",
+				params: {
+					uniqueKey: dzEl.dataset.dzUniqueKey
+				},
 				previewsContainer: dzEl.querySelector('.dz-files'),
 				// previewTemplate: previewTemplate,		
 				thumbnailWidth: dzEl.dataset.dzThumbnailWidth,
 				thumbnailHeight: dzEl.dataset.dzThumbnailHeight,
 				url: "index.php?rex-api-call=yform_dropzone&func=upload",
 
-				dictDefaultMessage: 					  document.querySelector(dzId).dataset.dzI18nDictdefaultmessage,
-				dictFallbackMessage: 					  document.querySelector(dzId).dataset.dzI18nDictfallbackmessage,
-				dictFallbackText: 						  document.querySelector(dzId).dataset.dzI18nDictfallbacktext,
-				dictFileTooBig: 							  document.querySelector(dzId).dataset.dzI18nDictfiletoobig,
-				dictInvalidFileType: 					  document.querySelector(dzId).dataset.dzI18nDictinvalidfiletype,
-				dictResponseError: 						  document.querySelector(dzId).dataset.dzI18nDictresponseerror,
-				dictCancelUpload: 						  document.querySelector(dzId).dataset.dzI18nDictcancelupload,
-				dictUploadCanceled: 					  document.querySelector(dzId).dataset.dzI18nDictuploadcanceled,
-				dictCancelUploadConfirmation:		document.querySelector(dzId).dataset.dzI18nDictCanceluploadconfirmation,
-				dictRemoveFile: 			 					document.querySelector(dzId).dataset.dzI18nDictremovefile,
-				dictRemoveFileConfirmation: 		document.querySelector(dzId).dataset.dzI18nDictremovefileconfirmation,
-				dictMaxFilesExceeded: 				  document.querySelector(dzId).dataset.dzI18nDictmaxfilesexceeded,
-				//dictFileSizeUnits: 			 			  document.querySelector(dzId).dataset.dzI18nDictfilesizeunits,
+				dictDefaultMessage: 					  document.querySelector(dzId).dataset.dzDictdefaultmessage,
+				dictFallbackMessage: 					  document.querySelector(dzId).dataset.dzDictfallbackmessage,
+				dictFallbackText: 						  document.querySelector(dzId).dataset.dzDictfallbacktext,
+				dictFileTooBig: 							  document.querySelector(dzId).dataset.dzDictfiletoobig,
+				dictInvalidFileType: 					  document.querySelector(dzId).dataset.dzDictinvalidfiletype,
+				dictResponseError: 						  document.querySelector(dzId).dataset.dzDictresponseerror,
+				dictCancelUpload: 						  document.querySelector(dzId).dataset.dzDictcancelupload,
+				dictUploadCanceled: 					  document.querySelector(dzId).dataset.dzDictuploadcanceled,
+				dictCancelUploadConfirmation:		document.querySelector(dzId).dataset.dzDictCanceluploadconfirmation,
+				dictRemoveFile: 			 					document.querySelector(dzId).dataset.dzDictremovefile,
+				dictRemoveFileConfirmation: 		document.querySelector(dzId).dataset.dzDictremovefileconfirmation,
+				dictMaxFilesExceeded: 				  document.querySelector(dzId).dataset.dzDictmaxfilesexceeded,
+				//dictFileSizeUnits: 			 			  document.querySelector(dzId).dataset.dzDictfilesizeunits,
 
 				// nachsehen, ob bereits Dateien hochgeladen wurden
 				init: function() {
@@ -64,7 +67,7 @@ var YFormDropzone = {
 							var file = {
 								name: value.name,
 								size: value.size,
-								unique: 12345
+								uniqueKey: dzEl.dataset.dzUniqueKey
 							};
 							YFormDropzone.setFile(file);
 							YFormDropzone.setActions();
@@ -77,8 +80,9 @@ var YFormDropzone = {
 				error: function(file) {
 					console.log("Fehler:");
 					console.log(file);
-					document.querySelector(dzId + ' [data-dz-errormessage]').style.display = "block";
-					myDropzone.removeFile(file);
+					console.log(dzId);
+					document.querySelector(dzId + ' .error').style.display = "block";
+					// myDropzone.removeFile(file);
 				}  
 			}
 		);
@@ -92,13 +96,16 @@ var YFormDropzone = {
 			var currentExtension = file.name.substring(file.name.lastIndexOf('.')).toLowerCase();
 			var typesAllowed = dzEl.dataset.dzTypes;
 			var maxFilesize = dzEl.dataset.dzFileSize;
-			if( file.size >  maxFilesize * 1024 * 1024 || typesAllowed.split(',').indexOf(currentExtension) === false){
+			if( (maxFilesize > 0 && file.size >  maxFilesize * 1024 * 1024) || typesAllowed.split(',').indexOf(currentExtension) === false) {
+
 				console.log("Validierungsfehler:");
 				console.log(file.size + ">" + maxFilesize);
 				console.log(currentExtension + "!=" + typesAllowed);
 
 				myDropzone.options.error.call(myDropzone, file);
+
 			} else {
+				
 				// Wenn erfolgreich: Dateianhang hinzufügen und Entfernen-Link einbauen.
 				console.log("Validierungserfolg:");
 				console.log(file.size + "<" + maxFilesize);

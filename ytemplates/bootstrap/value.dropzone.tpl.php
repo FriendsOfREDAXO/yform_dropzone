@@ -2,43 +2,59 @@
 $class       = $this->getElement('required') ? 'form-is-required ' : '';
 $class_group = trim('form-group  ' . $class . $this->getWarningClass());
 
+
+$dict_default = (json_decode('{
+    "add":"Dateien hinzufügen",
+    "start":"Upload starten",
+    "clear":"zurücksetzen",
+    "dictDefaultMessage":"Dateien auf dieses Feld ziehen",
+    "dictFallbackMessage":"Ihr Browser untersützt leider keine Drag\'n\'Drop Datei Uploads",
+    "dictFallbackText":"",
+    "dictFileTooBig":"Datei ist zu groß",
+    "dictInvalidFileType":"Dateityp wird nicht unterstützt",
+    "dictResponseError":"Ein Fehler ist aufgetreten",
+    "dictCancelUpload":"abbrechen",
+    "dictUploadCanceled":"Upload wurde abgebrochen",
+    "dictCancelUploadConfirmation":"Upload wird abgebrochen",
+    "dictRemoveFile":"entfernen",
+    "dictRemoveFileConfirmation":"Datei wird entfernt",
+    "dictMaxFilesExceeded":"Zuviele Dateien",
+    "dictFileSizeUnits":"mb"
+}', true));
+
+$dzDict = array_merge($dict_default, json_decode($this->getElement('dropzone_dict'), true));
+
+$dataDzDict = "";
+
+foreach($dzDict as $key => $value) {  
+    $dataDzDict .= "data-dz-".$k."=\"".$v."\" ";
+}
+
+dump($this->params['form_wrap_id']);
+
 ?>
+
 <div class="<?php echo $class_group; ?>" id="<?php echo $this->getHTMLId(); ?>">
 
     <label for="<?= $this->getFieldName() ?>"><?= $this->getElement('label') ?></label>
     <input type="hidden" id="<?= $this->getFieldId() ?>" name="<?= $this->getFieldName() ?>" value="<?= $this->getValue() ?>"/>
 
     <!-- Dropzone-Code -->
-    <!-- HTML heavily inspired by http://blueimp.github.io/jQuery-File-Upload/ -->
     <div class="dropzone dropzone-upload panel-default panel" data-dz-id="<?= $this->getFieldId() ?>" data-dz-unique-key="<?= $uniqueKey ?>" id="dz-<?= $this->getFieldId() ?>" 
-    data-dz-types="<?= $this->getElement('types') ?>" data-dz-max-files="10" data-dz-file-size="<?= $this->getElement('size_single') ?>" data-dz-thumbnail-width="80" data-dz-thumbnail-height="80" data-dz-parallel-uploads="4"
-    
-    data-dz-i18n-dictDefaultMessage="Dateien auf dieses Feld ziehen"
-    data-dz-i18n-dictFallbackMessage="Ihr Browser untersützt leider keine Drag'n'Drop Datei Uploads"
-    data-dz-i18n-dictFallbackText=""
-    data-dz-i18n-dictFileTooBig="Datei ist zu groß"
-    data-dz-i18n-dictInvalidFileType="Dateityp wird nicht unterstützt"
-    data-dz-i18n-dictResponseError="Ein Fehler ist aufgetreten"
-    data-dz-i18n-dictCancelUpload="abbrechen"
-    data-dz-i18n-dictUploadCanceled="Upload wurde abgebrochen"
-    data-dz-i18n-dictCancelUploadConfirmation="Upload wird abgebrochen" 
-    data-dz-i18n-dictRemoveFile="entfernen"
-    data-dz-i18n-dictRemoveFileConfirmation="Datei wird entfernt"
-    data-dz-i18n-dictMaxFilesExceeded="Zuviele Dateien"
-    data-dz-i18n-dictFileSizeUnits="mb"
-    >
+    data-dz-types="<?= $this->getElement('types') ?>" data-dz-max-files="10" data-dz-file-size="<?= $this->getElement('size_single') ?>" data-dz-thumbnail-width="80" data-dz-thumbnail-height="80" data-dz-parallel-uploads="4" <?= $dataDzDict ?>>
+
 
     <div class="row">
         <div class="col col-md-12">
             <!-- The fileinput-button span is used to style the file input field as button -->
             <span type="button" class="btn btn-success fileinput-button">
-                <i class="glyphicon glyphicon-plus"></i><span><?= $this->getElement('label_dropzone_file_button') ?></span>
+                <i class="glyphicon glyphicon-plus"></i><span><?= $dzDict['add'] ?></span>
             </span>
             <button type="button" class="btn btn-primary start">
-                <i class="glyphicon glyphicon-upload"></i><span><?= $this->getElement('label_dropzone_file_button_start') ?></span>
+                <i class="glyphicon glyphicon-upload"></i><span><?= $dzDict['start'] ?></span>
             </button>
             <button type="reset" class="btn btn-warning cancel">
-                <i class="glyphicon glyphicon-ban-circle"></i><span><?= $this->getElement('label_dropzone_file_button_cancle') ?></span>
+                <i class="glyphicon glyphicon-ban-circle"></i><span><?= $dzDict['clear'] ?></span>
             </button>
         </div>
     </div>
@@ -50,7 +66,7 @@ $class_group = trim('form-group  ' . $class . $this->getWarningClass());
                     background: green;
                 }
                 </style>
-                <p><?= $this->getElement('label_dropzone_file_info') ?></p>
+                <p><?= $dzDict['dictDefaultMessage'] ?></p>
         </div>
         <!-- / Upload-Target für Drag & Drop -->
 
@@ -68,7 +84,7 @@ $class_group = trim('form-group  ' . $class . $this->getWarningClass());
                     <div class="error text-danger" data-dz-errormessage style="display: block;">
                         <div class="dz-success-mark"><span>✔</span></div>
                         <div class="dz-error-mark"><span>✘</span></div>
-                        <p>Fehlermeldung<?= $this->getElement('label_dropzone_modal_error') ?></p>
+                        <p><?= $dzDict['dictResponseError'] ?></p>
                     </div>
                 </div>
 
@@ -81,9 +97,9 @@ $class_group = trim('form-group  ' . $class . $this->getWarningClass());
 
             
                 <div class="actions">
-                    <button type="button" class="btn btn-primary start"><i class="glyphicon glyphicon-upload"></i> <span>Start</span></button>
-                    <button type="button" data-dz-remove class="btn btn-warning cancel"><i class="glyphicon glyphicon-ban-circle"></i> <span>Cancel</span></button>
-                    <button type="button" data-dz-remove class="btn btn-danger delete"><i class="glyphicon glyphicon-trash"></i> <span>Delete</span></button>
+                    <button type="button" class="btn btn-primary start"><i class="glyphicon glyphicon-upload"></i> <span><?= "TODO: Start" ?></span></button>
+                    <button type="button" data-dz-remove class="btn btn-warning cancel"><i class="glyphicon glyphicon-ban-circle"></i> <span><?= $dzDict['dictCancelUpload'] ?></span></button>
+                    <button type="button" data-dz-remove class="btn btn-danger delete"><i class="glyphicon glyphicon-trash"></i> <span><?= $dzDict['dictRemoveFile'] ?></span></button>
                 </div>
             </div>
             <!-- / Preview-Element -->
@@ -91,6 +107,10 @@ $class_group = trim('form-group  ' . $class . $this->getWarningClass());
         </div>
             
         <div class="row">
+            <div class="error text-danger" data-dz-errormessage style="display: none;">
+                <p><?= $dzDict['dictResponseError'] ?></p>
+            </div>
+
             <div class="col col-md-12">
                 <!-- The global file processing state -->
                 <span class="fileupload-process">

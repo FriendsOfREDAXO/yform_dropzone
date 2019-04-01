@@ -21,6 +21,8 @@ class rex_yform_value_dropzone extends rex_yform_value_abstract
         }
         dump($uniqueKey);dump($this->params['this']);
 
+        dump(rex_session('rex_yform_dropzone')[$this->getFieldId()]);
+        dump($this->getFieldId());
         // Backend Download
         // Wenn im Backend ein Download angefordert wurde, dann den Download ausführen
         if (rex::isBackend() && rex_request('dropzone_download', 'string', false) && in_array(rex_request('dropzone_download', 'string'), explode(",",$this->getValue()))) {
@@ -90,21 +92,11 @@ class rex_yform_value_dropzone extends rex_yform_value_abstract
             'values' => [
 				'name' => ['type' => 'name', 'label' => rex_i18n::msg('yform_values_defaults_name')],
 					'label' => ['type' => 'text', 'label' => rex_i18n::msg('yform_values_defaults_label')],
-					'types' => ['type' => 'text', 'label' => rex_i18n::msg('yform_values_dropzone_types'), 'notice' => rex_i18n::msg('yform_values_dropzone_types_notice')],
-					'types_error' => ['type' => 'text', 'label' => rex_i18n::msg('yform_values_dropzone_types_error')],
+					'allowed_types' => ['type' => 'text', 'default' => ".pdf", 'label' => rex_i18n::msg('yform_values_dropzone_types'), 'notice' => rex_i18n::msg('yform_values_dropzone_types_notice')],
+					'allowed_filesize' => ['type' => 'text', 'default' => "10", 'label' => rex_i18n::msg('yform_values_dropzone_filesize'), 'notice' => rex_i18n::msg('yform_values_dropzone_types_notice')],
+                    'dropzone_dict' => ['type' => 'textarea', 'label' => rex_i18n::msg('yform_values_dropzone_dict')],
 					'required' => ['type' => 'boolean', 'label' => rex_i18n::msg('yform_values_dropzone_required')],
 					'notice' => ['type' => 'text', 'label' => rex_i18n::msg('yform_values_defaults_notice')],
-					'size_single' => ['type' => 'text', 'label' => rex_i18n::msg('yform_values_dropzone_size_single')],
-					'size_single_error' => ['type' => 'text', 'label' => rex_i18n::msg('yform_values_dropzone_size_single_error')],
-					'size_all' => ['type' => 'text', 'label' => rex_i18n::msg('yform_values_dropzone_size_all')],
-					'size_all_error' => ['type' => 'text', 'label' => rex_i18n::msg('yform_values_dropzone_size_all_error')],
-					'label_dropzone_file_info' => ['type' => 'text', 'label' => rex_i18n::msg('yform_values_dropzone_label_dropzone_file_info') , 'notice' => 'z.B. <code>Dateien zum Hochladen auf dieses Feld ziehen</code>'],
-					'label_dropzone_file_button' => ['type' => 'text', 'label' => rex_i18n::msg('yform_values_dropzone_label_dropzone_file_button')],
-					'label_dropzone_modal_error' => ['type' => 'text', 'label' => rex_i18n::msg('yform_values_dropzone_label_dropzone_modal_error') , 'notice' => 'z.B. <code>Dateien zum Hochladen auf dieses Feld ziehen</code>'],
-					'label_dropzone_modal_button' => ['type' => 'text', 'label' => rex_i18n::msg('yform_values_dropzone_label_dropzone_modal_button')],
-					'label_dropzone_file_button_start' => ['type' => 'text', 'label' => rex_i18n::msg('yform_values_dropzone_label_dropzone_modal_button')],
-                    'label_dropzone_file_button_cancle' => ['type' => 'text', 'label' => rex_i18n::msg('yform_values_dropzone_label_dropzone_modal_button')],
-                    'dropzone_dict' => ['type' => 'textarea', 'label' => rex_i18n::msg('yform_values_dropzone_dict')],
 				],
 				'description' => rex_i18n::msg('yform_values_dropzone_description'),
             'dbtype' => 'text',
@@ -182,7 +174,10 @@ class rex_yform_value_dropzone extends rex_yform_value_abstract
 
     private function _upload_getUniqueKey()
     {
-        return bin2hex(openssl_random_pseudo_bytes(16));
+        rex_login::startSession();
+        return md5(session_id());
+        // return rex_login::passwordHash(session_id());
+        // return bin2hex(openssl_random_pseudo_bytes(16));
     }
 
 }
