@@ -1,0 +1,10 @@
+yform_values_dropzone_types = Dateitypen
+yform_values_dropzone_types_notice = erlaubte Dateiendungen, z.B. <code>.pdf,.zip</code>. Frei lassen für alle Dateitypen.
+yform_values_dropzone_filesize = Dateigröße
+yform_values_dropzone_filesize_notice = maximale Dateigröße (pro Datei) in MB, z.B. <code>10</code>
+yform_values_dropzone_dict = Wörterbuch
+yform_values_dropzone_dict_notice = im JSON-Format können einzelne Beschriftungen und Meldungen überschrieben. Siehe Doku.
+yform_values_dropzone_required = Pflichtfeld
+yform_values_defaults_notice = Hinweis- / Notizfeld
+
+yform_values_dropzone_description = Fügt ein Upload-Feld auf Basis von dropzone.js hinzu, mit dem mehrere Dateien hochgeladen werden können. 
