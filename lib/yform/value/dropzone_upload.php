@@ -169,7 +169,7 @@ class rex_yform_value_dropzone extends rex_yform_value_abstract
     // Analog zum upload-Feld in YForm 3.0 - Datei herunterladen
     public static function dropzone_download($file)
     {
-        $filename = array_pop(explode(",", $file));
+        $filename = array_pop(explode("/", $file));
         $filepath = rex_path::pluginData('yform', 'manager', 'upload/dropzone/'.$file);
         
         if (file_exists($filepath)) {
