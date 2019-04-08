@@ -59,11 +59,7 @@ foreach($dzDict as $key => $value) {
 
         <!-- Upload-Target für Drag & Drop -->
         <div class="upload-container panel-body">
-            <style>
-                .upload-container.dz-drag-hover {
-                    background: green;
-                }
-                </style>
+
                 <p><?= $dzDict['dictDefaultMessage'] ?></p>
         </div>
         <!-- / Upload-Target für Drag & Drop -->
@@ -141,7 +137,7 @@ foreach($dzDict as $key => $value) {
         echo $notice; 
     ?>
 </div>
-<script src="/assets/addons/yuploader/js/dropzone.js" defer></script>
-<!-- <script src="/assets/js/dropzone.min.js"></script> -->
-<script src="/assets/addons/yuploader/js/dropzone-yform.js" defer></script>
-<link rel="stylesheet" href="/assets/addons/yuploader/css/dropzone.css">
+<!-- <script src="/assets/addons/yform_dropzone/js/dropzone.js" defer></script> -->
+<script src="/assets/addons/yform_dropzone/js/dropzone.min.js" defer></script>
+<script src="/assets/addons/yform_dropzone/js/dropzone-yform.js" defer></script>
+<link rel="stylesheet" href="/assets/addons/yform_dropzone/css/dropzone.css">
