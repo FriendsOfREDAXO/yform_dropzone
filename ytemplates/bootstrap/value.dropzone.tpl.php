@@ -26,7 +26,7 @@ $dzDict = array_merge($dzDictDefault, json_decode($this->getElement('dropzone_di
 
 $dataDzDict = "";
 
-foreach($dzDict as $key => $value) {  
+foreach($dzDict as $k => $v) {  
     $dataDzDict .= "data-dz-".$k."=\"".$v."\" ";
 }
 
