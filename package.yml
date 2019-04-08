@@ -4,8 +4,9 @@ author: Alexander Walther, Paul Götz, Thoams Skerbis
 supportpage: https://github.com/skerbis/yform_dropzone/
 
 pages:
-    yform/dropzone:
-        title: dropzone.js
+    yform/dropzone: 
+        title: dropzone
+        subPath: README.md
         perm: admin
 
 
