@@ -4,6 +4,7 @@
 
 Dieses Addon bindet [dropzone.js](https://github.com/enyo/dropzone/) ein und fügt YForm 3.0 die Value `dropzone` hinzu. Diese bietet eine Möglichkeit, mehrere Dateien auf einmal hochzuladen. 
 
+
 ## Features
 
 * Mehrere Dateien in ein YForm-Value hochladen
@@ -35,12 +36,18 @@ Nach der Installation ist das Feld in YForm verfügbar.
 
 Anschließend kann das Feld verwendet werden.
 
+# Links und Hilfe
+
+## Hinweise und bekannte Probleme in dieser Version
+
 > **ACHTUNG:** Im Moment muss eine hidden-Value namens `order_id` im Formular vorhanden sein, das einen einmaligen Key generiert. Beteilige dich am Addon, um dieses Problem zu lösen. z.B.: `$yform->setValueField('hidden', array('order_id',bin2hex(openssl_random_pseudo_bytes(16))));`
 
-# Links und Hilfe
+> Es wird jQuery beötigt.
+
+> Die Einstellung "Pflichtfeld" ist ohne Funktion
 
 ## Bugmeldungen Hilfe und Links
 
-* Auf Github: https://github.com/skerbis/yuploader/issues/
+* Auf Github: https://github.com/skerbis/yform_dropzone/issues/
 * im Forum: https://www.REDAXO.org/forum/
 * im Slack-Channel: https://friendsofREDAXO.slack.com/
