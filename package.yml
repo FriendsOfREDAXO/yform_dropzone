@@ -6,6 +6,7 @@ supportpage: https://github.com/skerbis/yform_dropzone/
 pages:
     yform/dropzone: 
         title: dropzone
+        path: pages/index.php
         subPath: README.md
         perm: admin
 
