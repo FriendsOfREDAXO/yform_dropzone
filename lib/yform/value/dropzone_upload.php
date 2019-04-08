@@ -13,16 +13,29 @@ class rex_yform_value_dropzone extends rex_yform_value_abstract
     public function enterObject()
     {
         rex_login::startSession();
-        
+
+        /* 
+
+        TODO: Unique Key wie beim upload-Feld vergeben, um daraus den Pfad auf dem Server zu generieren und Uploadregeln in SESSION abzulegen.
+
+        dump($this->params['this']->getFieldValue($this->getName()));
         $uniqueKey = $this->params['this']->getFieldValue($this->getName(), [$this->getId(), 'unique']);
         if ($uniqueKey == '') {
             // Nein - also anlegen
             $uniqueKey = self::_upload_getUniqueKey();
+            $this->params['this']->setFieldValue($this->getName(), [$this->getId(), 'unique'], $uniqueKey);
+            dump($this->params['this']->getFieldValue($this->getName()));
         }
-        dump($uniqueKey);dump($this->params['this']);
+        dump($this->params['this']->getFieldValue($this->getName()));
+        dump($uniqueKey);
+        dump($this->params['this']);
 
         dump(rex_session('rex_yform_dropzone')[$this->getFieldId()]);
-        dump($this->getFieldId());
+        dump($this->getFieldId()); */
+        
+        // hack für Projekt - die order_id als unique Key verwenden, bis ich kapiert habe, wie das richtig funzt. Benötigt Hidden-Feld "order_id"
+        $uniqueKey = $this->params['this']->getFieldValue("order_id");
+
         // Backend Download
         // Wenn im Backend ein Download angefordert wurde, dann den Download ausführen
         if (rex::isBackend() && rex_request('dropzone_download', 'string', false) && in_array(rex_request('dropzone_download', 'string'), explode(",",$this->getValue()))) {
@@ -31,16 +44,15 @@ class rex_yform_value_dropzone extends rex_yform_value_abstract
         // / Backend Download
 
         // Wir müssen die festgelegten Limits pro Formular als SESSION-Variable speichern, damit die Upload-API serverseitig validieren kann. 
-        $session[$this->getFieldId()]["allowedExtensions"] = $this->getElement('types');
-        $session[$this->getFieldId()]["maxFileSize"] = $this->getElement('size_single');
-        $session[$this->getFieldId()]["uniqueKey"] = $uniqueKey;
+        $session[$this->params['form_wrap_id']][$this->getFieldId()][$uniqueKey]["allowed_types"] = $this->getElement('allowed_types');
+        $session[$this->params['form_wrap_id']][$this->getFieldId()][$uniqueKey]["allowed_filesize"] = $this->getElement('allowed_filesize')  * 1024 * 1024;
 		rex_set_session('rex_yform_dropzone', $session);
 
         // Dropzone ausgeben
 		$this->params['form_output'][$this->getId()] = $this->parse('value.dropzone.tpl.php', ['uniqueKey' => $uniqueKey]);
 
         // Dateien / Anhänge in E-Mail verfügbar machen
-        $server_upload_path = rex_path::pluginData('yform', 'manager', 'upload/dropzone/'.$uniqueKey.'/');
+        $server_upload_path = rex_path::pluginData('yform', 'manager', 'upload/dropzone/'.$this->params['form_wrap_id'].'/'.$this->getFieldId().'/'.$uniqueKey.'/');
 
         // Nur Dateien, keine Ordner
         // https://stackoverflow.com/questions/14680121/include-just-files-in-scandir-array
@@ -81,7 +93,7 @@ class rex_yform_value_dropzone extends rex_yform_value_abstract
 
     public function getDescription()
     {
-        return 'dropzone|name|label|1000 weitere Parameter';
+        return 'dropzone|name|label|allowed_types|allowed_filesize|allowed_max_files|{"dropzone_dict"}|required|notice';
     }
 
     public function getDefinitions()
@@ -176,9 +188,9 @@ class rex_yform_value_dropzone extends rex_yform_value_abstract
     private function _upload_getUniqueKey()
     {
         rex_login::startSession();
-        return md5(session_id());
+        // return md5(session_id());
         // return rex_login::passwordHash(session_id());
-        // return bin2hex(openssl_random_pseudo_bytes(16));
+        return bin2hex(openssl_random_pseudo_bytes(16));
     }
 
 }

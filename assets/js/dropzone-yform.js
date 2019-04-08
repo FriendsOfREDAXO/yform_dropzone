@@ -37,7 +37,9 @@ var YFormDropzone = {
 				parallelUploads: dzEl.dataset.dzParallelUploads,
 				paramName: "file",
 				params: {
-					uniqueKey: dzEl.dataset.dzUniqueKey
+					formId: dzEl.dataset.dzFormId,
+					fieldId: dzEl.dataset.dzId,
+					uniqueKey: dzEl.dataset.dzUniqueKey,
 				},
 				previewsContainer: dzEl.querySelector('.dz-files'),
 				// previewTemplate: previewTemplate,		
@@ -62,12 +64,11 @@ var YFormDropzone = {
 				// nachsehen, ob bereits Dateien hochgeladen wurden
 				init: function() {
 					
-					$.get('index.php?rex-api-call=yform_dropzone&func=upload', function(data) {
+					$.get('index.php?rex-api-call=yform_dropzone&func=upload&formId='+dzEl.dataset.dzFormId+'&fieldId='+dzEl.dataset.dzId+"&uniqueKey="+dzEl.dataset.dzUniqueKey+'', function(data) {
 						$.each(data, function(key,value){
 							var file = {
 								name: value.name,
-								size: value.size,
-								uniqueKey: dzEl.dataset.dzUniqueKey
+								size: value.size
 							};
 							YFormDropzone.setFile(file);
 							YFormDropzone.setActions();
@@ -82,7 +83,7 @@ var YFormDropzone = {
 					console.log(file);
 					console.log(dzId);
 					document.querySelector(dzId + ' .error').style.display = "block";
-					// myDropzone.removeFile(file);
+					myDropzone.removeFile(file);
 				}  
 			}
 		);
@@ -114,7 +115,13 @@ var YFormDropzone = {
 				 file.previewElement.querySelector(".dz-remove").addEventListener("click", function(e) {
 					e.preventDefault();
 					e.stopPropagation();
-					$.post( 'index.php?rex-api-call=yform_dropzone&func=delete', { file: file.name }).done(function( data ) {
+					$.post( 'index.php?rex-api-call=yform_dropzone&func=delete', { 
+						file: file.name, 
+						formId: dzEl.dataset.dzFormId,
+						fieldId: dzEl.dataset.dzId,
+						uniqueKey: dzEl.dataset.dzUniqueKey
+				 }
+				 ).done(function( data ) {
 						myDropzone.removeFile(file);
 					});
 				});
@@ -160,7 +167,14 @@ var YFormDropzone = {
 			
 			var _this = $(this);
 			
-			$.post( 'index.php?rex-api-call=yform_dropzone&func=delete', { file: $(this).data('name') }).done(function( data ) {
+			$.post( 'index.php?rex-api-call=yform_dropzone&func=delete', 
+			{ 
+				file: $(this).data('name'), 
+				formId: dzEl.dataset.dzFormId,
+				fieldId: dzEl.dataset.dzId,
+				uniqueKey: dzEl.dataset.dzUniqueKey
+		 }
+		 ).done(function( data ) {
 				_this.parent().remove();
 			});
 			
@@ -169,9 +183,9 @@ var YFormDropzone = {
 	},
 
 	setFile: function(file) {
-	 $('.upload-files').addClass('active');
+	 $('.dz-files').addClass('active');
 	 $('input[name="upload"]').val(file.name);
-	 $('.upload-files').append('<div class="upload-item"><div class="row upload-data"><div class="col"><strong><span class="upload-name">' + file.name + '</span></strong><br /><span class="upload-size">(' + (file.size / 1024 / 1024).toFixed(2) + ' MB)</span><a data-name="'+file.name+'" class="btn btn-default remove-file" role="button"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span> entfernen</a></div>');
+	 $('.dz-files').append('<div class="upload-item"><div class="row upload-data"><div class="col"><strong><span class="upload-name">' + file.name + '</span></strong><br /><span class="upload-size">(' + (file.size / 1024 / 1024).toFixed(2) + ' MB)</span><a data-name="'+file.name+'" class="btn btn-default remove-file" role="button"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span> entfernen</a></div>');
 	},
 
 };

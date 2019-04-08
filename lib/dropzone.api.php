@@ -8,15 +8,15 @@ class rex_api_yform_dropzone extends rex_api_function
 
 	public function getPath() {
 		// Todo: Subpath für jede Datei, um Doubletten zu verhindern.
-		return rex_path::pluginData('yform', 'manager', 'upload/dropzone/'.rex_post("uniqueKey", 'string', 'nirvana').'/');
+		return rex_path::pluginData('yform', 'manager', 'upload/dropzone/'.rex_request("formId", 'string', 'public')."/".rex_request("fieldId", 'string', 'all')."/".rex_request("uniqueKey", 'string', 'public').'/');
 	} 
 
 	public function getAllowedExtensions() {
-		return explode(",",rex_session('rex_yform_dropzone')[rex_post("uniqueKey")]["allowedExtensions"]);
+		return explode(",",rex_session('rex_yform_dropzone')[rex_request("formId")][rex_request("fieldId")][rex_request("uniqueKey")]["allowed_types"]);
 	} 
 
 	public function getAllowedSizePerFile() {
-		return rex_session('rex_yform_dropzone')[rex_post("uniqueKey")]["maxFileSize"] * 1024;
+		return rex_session('rex_yform_dropzone')[rex_request("formId")][rex_request("fieldId")][rex_request("uniqueKey")]["allowed_filesize"];
 	} 
 
 
@@ -79,8 +79,9 @@ class rex_api_yform_dropzone extends rex_api_function
 			$return["fileSize"] = $fileSize;
 			$return['exists'] = file_exists(self::getPath().$targetFile);
 			self::httpError($return);
-		}
-		else {                                                           
+		} else {                  
+			
+			// Ausgabe bisher hochgeladener Dateien
 			$result  = array();
 		 
 			$files = scandir(self::getPath());
@@ -97,6 +98,7 @@ class rex_api_yform_dropzone extends rex_api_function
 			header('Content-type: text/json');
 			header('Content-type: application/json');
 			exit( json_encode( $result ) );
+
 		}
 	}
 
