@@ -62,7 +62,8 @@ class rex_yform_value_dropzone extends rex_yform_value_abstract
                 return !is_dir($file);
             });
 
-            $value = $uniqueKey. "/".implode(",".$uniqueKey."/",$uploaded_files); 
+            $path = '/'.$this->params['form_wrap_id'].'/'.$this->getFieldId().'/'.$uniqueKey.'/';
+            $value = $path.implode(",".$path,$uploaded_files); 
         };
         
         $this->params['value_pool']['email'][$this->getName()] = $value;
@@ -71,7 +72,7 @@ class rex_yform_value_dropzone extends rex_yform_value_abstract
             $this->params['value_pool']['sql'][$this->getName()] = $value;
         }
 
-        // Todo: foreach file in folder add to  value_pool files
+        // Todo: foreach file in folder add to value_pool files
         if ($filepath != '') {
             $this->params['value_pool']['files'][$this->getName()] = [$filename, $filepath, $real_filepath];
         }
