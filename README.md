@@ -42,7 +42,7 @@ Anschließend kann das Feld verwendet werden.
 
 > **ACHTUNG:** Im Moment muss eine hidden-Value namens `order_id` im Formular vorhanden sein, das einen einmaligen Key generiert. Beteilige dich am Addon, um dieses Problem zu lösen. z.B.: `$yform->setValueField('hidden', array('order_id',bin2hex(openssl_random_pseudo_bytes(16))));`
 
-> Es wird jQuery beötigt.
+> Es wird jQuery benötigt.
 
 > Die Einstellung "Pflichtfeld" ist ohne Funktion
 
