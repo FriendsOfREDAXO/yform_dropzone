@@ -17,7 +17,7 @@ Dieses Addon bindet [dropzone.js](https://github.com/enyo/dropzone/) ein und fü
 
 ## Installation
 
-Voraussetzung für die aktuelle Version von YUploader: REDAXO >= 5.7, YForm >= 3.0
+Voraussetzung für die aktuelle Version von `yform_dropzone`: REDAXO >= 5.7, YForm >= 3.0
 
 * Über das REDAXO-Backend installieren und aktivieren
 * Setup ausführen
