@@ -48,6 +48,6 @@ Anschließend kann das Feld verwendet werden.
 
 ## Bugmeldungen Hilfe und Links
 
-* Auf Github: https://github.com/skerbis/yform_dropzone/issues/
+* Auf Github: https://github.com/FriendsOfREDAXO/yform_dropzone/issues
 * im Forum: https://www.REDAXO.org/forum/
 * im Slack-Channel: https://friendsofREDAXO.slack.com/
