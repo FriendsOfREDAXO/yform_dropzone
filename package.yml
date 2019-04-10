@@ -1,6 +1,6 @@
 package: yform_dropzone
 version: 0.7.1-dev
-author: Alexander Walther, Paul Götz, Thoams Skerbis
+author: Alexander Walther, Paul Götz, Thomas Skerbis
 supportpage: https://github.com/skerbis/yform_dropzone/
 
 pages:
