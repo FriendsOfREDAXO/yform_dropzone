@@ -38,7 +38,7 @@ foreach($dzDict as $k => $v) {
     <input type="hidden" id="<?= $this->getFieldId() ?>" name="<?= $this->getFieldName() ?>" value="<?= $this->getValue() ?>"/>
 
     <!-- Dropzone-Code -->
-    <div class="dropzone dropzone-upload panel-default panel" data-dz-form-id="<?= $this->params['form_wrap_id'] ?>" data-dz-id="<?= $this->getFieldId() ?>"  data-dz-unique-key="<?= $uniqueKey ?>" id="dz-<?= $this->getFieldId() ?>" 
+    <div class="dropzone dropzone-upload panel-default panel" data-dz-selector="<?= $this->getElement('selector') ?>" data-dz-form-id="<?= $this->params['form_wrap_id'] ?>" data-dz-id="<?= $this->getFieldId() ?>"  data-dz-unique-key="<?= $uniqueKey ?>" id="dz-<?= $this->getFieldId() ?>" 
     data-dz-types="<?= $this->getElement('allowed_types') ?>" data-dz-max-files="<?= $this->getElement('allowed_max_files') ?>" data-dz-file-size="<?= $this->getElement('size_single') ?>" data-dz-thumbnail-width="80" data-dz-thumbnail-height="80" data-dz-parallel-uploads="4" <?= $dataDzDict ?>>
 
 
@@ -103,6 +103,7 @@ foreach($dzDict as $k => $v) {
         <div class="row">
             <div class="error text-danger" data-dz-errormessage style="display: none;">
                 <p><?= $dzDict['dictResponseError'] ?></p>
+                <div class="close">X</div>
             </div>
 
             <div class="col col-md-12">

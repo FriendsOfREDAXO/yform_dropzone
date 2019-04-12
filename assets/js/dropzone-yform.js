@@ -19,18 +19,27 @@ var YFormDropzone = {
 
 			var previewTemplate = previewNode.parentNode.innerHTML;
 			previewNode.parentNode.removeChild(previewNode);
-
+			
+			/*
+			var container; 
+			if(dzEl.dataset.dzSelector == "id") {
+				container = dzEl.querySelector(".upload-container");
+			} else {
+				container = document.body;
+			} 
+			*/
 
 			// siehe https://www.dropzonejs.com/bootstrap.html#
 			myDropzone = new Dropzone(
-				dzEl.querySelector(".upload-container"), // oder document.body für die gesamte Seite
+				document.body, // Todo: container-Element auslesen, s.o. - funktioniert noch nicht
 			{
 				// https://www.dropzonejs.com/#configuration-options
-				autoQueue: false, 	  
+				autoQueue: true, 	  
 				autoProcessQueue: true,
 				addRemoveLinks: true,
 				acceptedFiles: dzEl.dataset.dzTypes,
 				clickable: dzEl.querySelector(".fileinput-button"),
+				// clickable: false,
 				createImageThumbnails: true,
 				maxFiles: dzEl.dataset.dzMaxFiles,
 				maxFilesize: dzEl.dataset.dzFileSize * 1024,
@@ -79,10 +88,12 @@ var YFormDropzone = {
 
 				// Container für Fehlermeldungen
 				error: function(file) {
-					console.log("Fehler:");
-					console.log(file);
-					console.log(dzId);
 					document.querySelector(dzId + ' .error').style.display = "block";
+
+					$(dzId + ' .error .close').on('click', function() {
+						document.querySelector(dzId + ' .error').style.display = "none";
+					});
+
 					myDropzone.removeFile(file);
 				}  
 			}
@@ -99,18 +110,11 @@ var YFormDropzone = {
 			var maxFilesize = dzEl.dataset.dzFileSize;
 			if( (maxFilesize > 0 && file.size >  maxFilesize * 1024 * 1024) || typesAllowed.split(',').indexOf(currentExtension) === false) {
 
-				console.log("Validierungsfehler:");
-				console.log(file.size + ">" + maxFilesize);
-				console.log(currentExtension + "!=" + typesAllowed);
-
 				myDropzone.options.error.call(myDropzone, file);
 
 			} else {
 				
 				// Wenn erfolgreich: Dateianhang hinzufügen und Entfernen-Link einbauen.
-				console.log("Validierungserfolg:");
-				console.log(file.size + "<" + maxFilesize);
-				console.log(currentExtension + "==" + typesAllowed);
 
 				 file.previewElement.querySelector(".dz-remove").addEventListener("click", function(e) {
 					e.preventDefault();
@@ -192,8 +196,7 @@ var YFormDropzone = {
 
 $(document).ready(function() {
 
-	$(".dropzone").each(function() {
+	$('.dropzone').each(function() {
 		YFormDropzone.init("#"+$(this).attr('id'));
 	});	
-
 });
