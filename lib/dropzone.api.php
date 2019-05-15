@@ -47,13 +47,13 @@ class rex_api_yform_dropzone extends rex_api_function
 	}
 		
 	public static function executeUpload(){
-		
-		
-		rex_dir::create(self::getPath());
 
 		// Todo: https://www.redaxo.org/api/master/class-rex_request.html files
 
 		if (rex_request::files('file', "array", false)) {
+
+			rex_dir::create(self::getPath());
+
 			$tempFile = rex_request::files('file')['tmp_name'];
 			$targetFile =  strtolower(rex_request::files('file')['name']);
 			$fileSize =  rex_request::files('file')['size'];
@@ -86,17 +86,18 @@ class rex_api_yform_dropzone extends rex_api_function
 			// Ausgabe bisher hochgeladener Dateien
 			$result  = array();
 		 
-			$files = scandir(self::getPath());
-			if ( false !== $files ) {
-				foreach ( $files as $file ) {
-					if ( '.' != $file && '..' != $file) {
-						$obj['name'] = $file;
-						$obj['size'] = filesize(self::getPath().$file);
-						$result[] = $obj;
+		 	if(file_exists(self::getPath())) {
+				$files = scandir(self::getPath());
+				if ( false !== $files ) {
+					foreach ( $files as $file ) {
+						if ( '.' != $file && '..' != $file) {
+							$obj['name'] = $file;
+							$obj['size'] = filesize(self::getPath().$file);
+							$result[] = $obj;
+						}
 					}
 				}
-			}
-			 
+			 }
 			header('Content-type: text/json');
 			header('Content-type: application/json');
 			exit( json_encode( $result ) );
