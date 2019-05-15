@@ -64,7 +64,7 @@ var YFormDropzone = {
 				dictResponseError: 						  document.querySelector(dzId).dataset.dzDictresponseerror,
 				dictCancelUpload: 						  document.querySelector(dzId).dataset.dzDictcancelupload,
 				dictUploadCanceled: 					  document.querySelector(dzId).dataset.dzDictuploadcanceled,
-				dictCancelUploadConfirmation:		document.querySelector(dzId).dataset.dzDictCanceluploadconfirmation,
+				dictCancelUploadConfirmation:		document.querySelector(dzId).dataset.dzDictcanceluploadconfirmation,
 				dictRemoveFile: 			 					document.querySelector(dzId).dataset.dzDictremovefile,
 				dictRemoveFileConfirmation: 		document.querySelector(dzId).dataset.dzDictremovefileconfirmation,
 				dictMaxFilesExceeded: 				  document.querySelector(dzId).dataset.dzDictmaxfilesexceeded,
