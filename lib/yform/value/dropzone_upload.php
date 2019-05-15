@@ -34,7 +34,14 @@ class rex_yform_value_dropzone extends rex_yform_value_abstract
         dump($this->getFieldId()); */
         
         // hack für Projekt - die order_id als unique Key verwenden, bis ich kapiert habe, wie das richtig funzt. Benötigt Hidden-Feld "order_id"
-        $uniqueKey = $this->params['this']->getFieldValue("order_id");
+        
+
+        if(rex::isBackend()) {
+                $fields = array_column($this->obj, NULL, 'name');
+                $uniqueKey = $fields['order_id']->value;                
+        } else if (rex::isFrontend()) { 
+                $uniqueKey = rex_session("dropzone");
+        }
 
         // Backend Download
         // Wenn im Backend ein Download angefordert wurde, dann den Download ausführen
@@ -49,8 +56,11 @@ class rex_yform_value_dropzone extends rex_yform_value_abstract
 		rex_set_session('rex_yform_dropzone', $session);
 
         // Dropzone ausgeben
-		$this->params['form_output'][$this->getId()] = $this->parse('value.dropzone.tpl.php', ['uniqueKey' => $uniqueKey]);
-
+        if(rex::isFrontend()) {
+		  $this->params['form_output'][$this->getId()] = $this->parse('value.dropzone.tpl.php', ['uniqueKey' => $uniqueKey]);
+        } else {
+            dump($this->params);
+        }
         // Dateien / Anhänge in E-Mail verfügbar machen
         $server_upload_path = rex_path::pluginData('yform', 'manager', 'upload/dropzone/'.$this->params['form_wrap_id'].'/'.$this->getFieldId().'/'.$uniqueKey.'/');
 
