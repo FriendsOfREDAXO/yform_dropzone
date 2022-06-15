@@ -102,12 +102,12 @@ class rex_yform_value_dropzone extends rex_yform_value_abstract
 
     }
 
-    public function getDescription()
+    public function getDescription(): string
     {
         return 'dropzone|name|label|allowed_types|allowed_filesize|allowed_max_files|{"dropzone_dict"}|required|notice';
     }
 
-    public function getDefinitions()
+    public function getDefinitions(): array
     {
         return [
             'type' => 'value',
