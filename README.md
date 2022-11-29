@@ -39,6 +39,14 @@ Anschließend kann das Feld verwendet werden.
 
 > Die Einstellung "Pflichtfeld" ist ohne Funktion
 
+## Debugging
+
+Wenn was mit der Dropzone clientseitig schief läuft, ist das Problem entweder in der mitgelieferten JS-Datei in `/assets/addons/yform_dropzone/js/`, oder serverseitig in der API unter `/redaxo/src/addons/yform_dropzone/lib/`.
+
+Erster Ansatz: Browser-Developer-Console liefert beim Fehler zusätzliche Infos als JSON in der Response, z.B. bei der Validierung (Dateigröße, Formate, oder, ob die Datei bereits vorhanden war).
+
+Meist stimmt einfach was mit den Parametern der Validierung nicht.
+
 ## Bugmeldungen Hilfe und Links
 
 * Auf Github: https://github.com/FriendsOfREDAXO/yform_dropzone/issues
