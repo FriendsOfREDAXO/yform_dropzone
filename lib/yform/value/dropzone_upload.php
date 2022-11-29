@@ -76,10 +76,10 @@ class rex_yform_value_dropzone extends rex_yform_value_abstract
             $value = $path.implode(",".$path,$uploaded_files); 
         };
         
-        $this->params['value_pool']['email'][$this->getName()] = $value;
+        $this->params['value_pool']['email'][$this->getName()] = $value ?? "";
 
         if ($this->saveInDb()) {
-            $this->params['value_pool']['sql'][$this->getName()] = $value;
+            $this->params['value_pool']['sql'][$this->getName()] = $value ?? "";
         }
 
         // Todo: foreach file in folder add to value_pool files
