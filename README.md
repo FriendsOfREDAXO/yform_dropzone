@@ -1,8 +1,8 @@
-# dropzone für YForm 3.0
+# Dropzone Multi-Upload-Feld mit Drag & Drop für YForm 4
 
 ## Übersicht 
 
-Dieses Addon bindet [dropzone.js](https://github.com/enyo/dropzone/) ein und fügt YForm 3.0 die Value `dropzone` hinzu. Diese bietet eine Möglichkeit, mehrere Dateien auf einmal hochzuladen. 
+Dieses Addon bindet [dropzone.js](https://github.com/enyo/dropzone/) ein und fügt YForm die Value `dropzone` hinzu. Diese bietet eine Möglichkeit, mehrere Dateien auf einmal hochzuladen. 
 
 
 ## Features
@@ -15,20 +15,13 @@ Dieses Addon bindet [dropzone.js](https://github.com/enyo/dropzone/) ein und fü
 
 > **Hinweis:** Es sollte sichergestellt sein, dass der Webspace genügend Speicherplatz hat, um größere Mengen an Uploads problemlos abzuspeichern.
 
-## Installation
+## Erste Schritte
 
-Voraussetzung für die aktuelle Version von `yform_dropzone`: REDAXO >= 5.7, YForm >= 3.0
-
-* Über das REDAXO-Backend installieren und aktivieren
-* Setup ausführen
-
-# Erste Schritte
-
-## Setup
+### Setup
 
 Nach der Installation ist das Feld in YForm verfügbar.
 
-## Feld hinzufügen (Table Manager)
+### Feld hinzufügen (Table Manager)
 
 1. In REDAXO auf `YForm` > `Table Manager` klicken
 2. In der gewünschten Tabelle die Felddefinition editieren
@@ -36,9 +29,9 @@ Nach der Installation ist das Feld in YForm verfügbar.
 
 Anschließend kann das Feld verwendet werden.
 
-# Links und Hilfe
+## Links und Hilfe
 
-## Hinweise und bekannte Probleme in dieser Version
+### Hinweise und bekannte Probleme in dieser Version
 
 > **ACHTUNG:** Im Moment muss eine hidden-Value namens `order_id` im Formular vorhanden sein, das einen einmaligen Key generiert. Beteilige dich am Addon, um dieses Problem zu lösen. z.B.: `$yform->setValueField('hidden', array('order_id',bin2hex(openssl_random_pseudo_bytes(16))));`
 
