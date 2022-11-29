@@ -28,7 +28,7 @@ Nach der Installation ist das Feld in YForm verfügbar.
 3. Das Feld `dropzone` hinzufügen und den Instruktionen folgen
 4. Lang-Parameter hinzufügen:
 
-````
+```
 {
     "add":"Dateien hinzufügen",
     "start":"Upload starten",
