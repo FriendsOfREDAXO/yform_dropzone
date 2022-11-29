@@ -26,6 +26,28 @@ Nach der Installation ist das Feld in YForm verfügbar.
 1. In REDAXO auf `YForm` > `Table Manager` klicken
 2. In der gewünschten Tabelle die Felddefinition editieren
 3. Das Feld `dropzone` hinzufügen und den Instruktionen folgen
+4. Lang-Parameter hinzufügen:
+
+````
+{
+    "add":"Dateien hinzufügen",
+    "start":"Upload starten",
+    "clear":"zurücksetzen",
+    "dictDefaultMessage":"Dateien auf dieses Feld ziehen",
+    "dictFallbackMessage":"Ihr Browser untersützt leider keine Drag\'n\'Drop Datei Uploads",
+    "dictFallbackText":"",
+    "dictFileTooBig":"Datei ist zu groß",
+    "dictInvalidFileType":"Dateityp wird nicht unterstützt",
+    "dictResponseError":"Ein Fehler ist aufgetreten. Ein oder mehrere Dateien konnten nicht hochgeladen werden.",
+    "dictCancelUpload":"abbrechen",
+    "dictUploadCanceled":"Upload wurde abgebrochen",
+    "dictCancelUploadConfirmation":"Upload wird abgebrochen",
+    "dictRemoveFile":"entfernen",
+    "dictRemoveFileConfirmation":"Datei wird entfernt",
+    "dictMaxFilesExceeded":"Zuviele Dateien",
+    "dictFileSizeUnits":"mb"
+}
+```
 
 Anschließend kann das Feld verwendet werden.
 
